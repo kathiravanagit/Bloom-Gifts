@@ -4,7 +4,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 
-require('./db/database'); // ensures schema exists on boot
+require('./db/database'); // connect to MongoDB
 
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
@@ -14,17 +14,37 @@ const hamperComponentsRouter = require('./routes/hamperComponents');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Allow both local dev and the deployed Vercel frontend
+const allowedOrigins = [
+  'http://localhost:3001',
+  process.env.FRONTEND_URL, // e.g. https://bloom-gifts.vercel.app
+].filter(Boolean);
 
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
-app.use(session({
-  secret: 'bloom-gifts-final-project-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 4 }, // 4 hours
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    }
+  },
+  credentials: true,
 }));
 
-
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'bloom-gifts-dev-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 4, // 4 hours
+    secure: isProduction,        // HTTPS only in production
+    sameSite: isProduction ? 'none' : 'lax', // cross-origin cookies on production
+  },
+}));
 
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
