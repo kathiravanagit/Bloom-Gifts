@@ -20,7 +20,10 @@ router.post('/login', async (req, res) => {
 
     req.session.adminId = user._id.toString();
     req.session.adminUsername = user.username;
-    res.json({ username: user.username });
+    req.session.save((err) => {
+      if (err) return res.status(500).json({ error: 'Session save failed' });
+      res.json({ username: user.username });
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
