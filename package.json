@@ -1,22 +1,12 @@
 {
-  "name": "bloom-gifts",
+  "name": "bloom-gifts-root",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "seed": "node server/db/seed.js",
-    "start": "node server/server.js",
-    "dev": "node server/db/seed.js && node server/server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "engines": {
-    "node": ">=22.5.0"
+    "start": "concurrently \"npm run start --prefix backend\" \"npm run start --prefix frontend\"",
+    "dev": "npm start",
+    "install:all": "npm install && npm install --prefix backend && npm install --prefix frontend"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "express": "^5.2.1",
-    "express-session": "^1.19.0"
+    "concurrently": "^10.0.5"
   }
 }

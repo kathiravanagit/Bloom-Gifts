@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | Bloom & Gifts</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="login-shell">
+  <div class="login-card">
+    <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="7.5" r="3.4" fill="white"/><circle cx="12" cy="16.5" r="3.4" fill="white"/><circle cx="7.5" cy="12" r="3.4" fill="white"/><circle cx="16.5" cy="12" r="3.4" fill="white"/><circle cx="12" cy="12" r="3.6" fill="#C9A227"/></svg></span> Bloom &amp; Gifts</div>
+    <p style="text-align:center; margin-bottom:24px;">Admin Dashboard</p>
+
+    <form id="loginForm">
+      <div class="form-field">
+        <label for="username">Username</label>
+        <input type="text" id="username" autocomplete="username" required>
+      </div>
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input type="password" id="password" autocomplete="current-password" required>
+      </div>
+      <p id="loginError" style="color:#B8556A; font-size:0.85rem; display:none; margin-bottom:14px;"></p>
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign In</button>
+    </form>
+    <p class="login-hint">Demo credentials &mdash; username: <strong>admin</strong>, password: <strong>admin123</strong></p>
+    <p class="login-hint"><a href="index.html">&larr; Back to shop</a></p>
+  </div>
+</div>
+
+<script src="/config.js"></script>
+  <script src="js/shared.js"></script>
+<script src="js/admin-login.js"></script>
+</body>
+</html>

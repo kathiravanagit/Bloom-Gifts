@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop All | Bloom & Gifts</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="products">
+
+<header id="site-header"></header>
+
+<section class="section" style="padding-top:48px;">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Shop</span>
+      <h2>Find the perfect gift</h2>
+      <p>Every product below is customizable &mdash; pick a category, then build it your way on the product page.</p>
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-chip" data-category="all">All</button>
+      <button class="filter-chip" data-category="bouquets">Customized Bouquets</button>
+      <button class="filter-chip" data-category="hampers">Gift Hampers</button>
+      <button class="filter-chip" data-category="chocolate">Chocolate Hampers</button>
+      <button class="filter-chip" data-category="albums">Albums</button>
+      <button class="filter-chip" data-category="cards">Greeting Cards</button>
+    </div>
+
+    <div class="product-grid" id="productGrid">
+      <p style="text-align:center; grid-column:1/-1;">Loading products&hellip;</p>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="/config.js"></script>
+  <script src="js/shared.js"></script>
+<script src="js/products.js"></script>
+</body>
+</html>
