@@ -1,4 +1,62 @@
+# ─── Dependencies ────────────────────────────────────────────────────────────
 node_modules/
+**/node_modules/
+
+# ─── Environment / Secrets ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── SQLite Databases ────────────────────────────────────────────────────────
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+backend/db/bloomgifts.sqlite
+# (legacy paths kept for safety)
 server/db/bloomgifts.sqlite
 server/db/bloomgifts.sqlite-shm
 server/db/bloomgifts.sqlite-wal
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# ─── Build / Output ──────────────────────────────────────────────────────────
+dist/
+build/
+.output/
+.next/
+.nuxt/
+out/
+
+# ─── Runtime / Cache ─────────────────────────────────────────────────────────
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# ─── OS Files ────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ─── Editor / IDE ────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ─── Package Manager Locks (keep these for reproducibility) ──────────────────
+# Uncomment if you want to ignore lock files (not recommended):
+# package-lock.json
+# yarn.lock
