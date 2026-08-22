@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Own Hamper | Bloom & Gifts</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="custom-hamper">
+
+<header id="site-header"></header>
+
+<section class="section" style="padding-top:44px;">
+  <div class="container">
+    <div class="section-head" style="margin-bottom:36px;">
+      <span class="eyebrow">Build your own</span>
+      <h2>Design a hamper from the ground up</h2>
+      <p>Pick a base, then add flowers, something sweet, a drink, and a few finishing touches. Everything you choose goes into one hamper.</p>
+    </div>
+
+    <div class="builder-layout">
+      <div id="builderSections">
+        <p style="text-align:center;">Loading components&hellip;</p>
+      </div>
+
+      <div class="summary-card builder-summary" id="builderSummary">
+        <h3 style="margin-bottom:6px;">Your Hamper</h3>
+        <p style="font-size:0.85rem; margin-bottom:16px;">Everything you've added so far.</p>
+        <div class="tag-chips" id="builderChips"></div>
+        <div class="price-dial">
+          <span class="label">Total</span>
+          <span class="amount" id="builderTotal">$0.00</span>
+        </div>
+        <div class="qty-row" style="margin-top:18px;">
+          <span style="font-weight:700; font-size:0.88rem;">Quantity</span>
+          <div class="qty-control">
+            <button type="button" id="builderQtyMinus" aria-label="Decrease quantity">&minus;</button>
+            <span id="builderQtyValue">1</span>
+            <button type="button" id="builderQtyPlus" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" id="builderAddToCart" style="margin-top:16px;" disabled>Choose a base first</button>
+        <p style="margin-top:14px;"><a href="products.html">&larr; Back to shop</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="js/shared.js"></script>
+<script src="js/custom-hamper.js"></script>
+</body>
+</html>

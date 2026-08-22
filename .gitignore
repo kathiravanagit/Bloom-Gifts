@@ -1,0 +1,4 @@
+node_modules/
+server/db/bloomgifts.sqlite
+server/db/bloomgifts.sqlite-shm
+server/db/bloomgifts.sqlite-wal

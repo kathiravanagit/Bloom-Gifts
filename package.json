@@ -1,0 +1,22 @@
+{
+  "name": "bloom-gifts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "seed": "node server/db/seed.js",
+    "start": "node server/server.js",
+    "dev": "node server/db/seed.js && node server/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0"
+  }
+}
