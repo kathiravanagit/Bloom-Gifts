@@ -28,6 +28,7 @@ async function loadProducts(category) {
   grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Loading products&hellip;</p>';
   try {
     const res = await fetch(window.API_BASE_URL + `/api/products?category=${encodeURIComponent(category)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const products = await res.json();
     if (!products.length) {
       grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No products in this category yet.</p>';
@@ -35,6 +36,7 @@ async function loadProducts(category) {
     }
     grid.innerHTML = products.map(productCardHTML).join('');
   } catch (err) {
+    console.error('loadProducts error:', err);
     grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Could not load products right now.</p>';
   }
 }

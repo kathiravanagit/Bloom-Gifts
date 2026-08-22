@@ -34,11 +34,13 @@ async function loadBestsellers() {
   if (!grid) return;
   try {
     const res = await fetch(window.API_BASE_URL + '/api/products');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const products = await res.json();
     const featured = products.filter((p) => p.badge).slice(0, 4);
     const list = featured.length ? featured : products.slice(0, 4);
     grid.innerHTML = list.map(productCardHTML).join('');
   } catch (err) {
+    console.error('loadBestsellers error:', err);
     grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Could not load products right now.</p>';
   }
 }

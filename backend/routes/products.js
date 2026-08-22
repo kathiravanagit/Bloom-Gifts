@@ -24,6 +24,27 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/products/meta/hamper-components -> grouped list for the Build Your Own Hamper page
+// NOTE: This must be defined before /:slug so "meta" isn't treated as a slug.
+router.get('/meta/hamper-components', async (req, res) => {
+  try {
+    const rows = await HamperComponent.find().sort({ category: 1, sort_order: 1 }).lean();
+    const groups = new Map();
+    rows.forEach((row) => {
+      if (!groups.has(row.category)) groups.set(row.category, []);
+      groups.get(row.category).push({
+        id: row._id.toString(),
+        name: row.name,
+        price: row.price,
+        description: row.description,
+      });
+    });
+    res.json(Object.fromEntries(groups));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // GET /api/products/:slug -> single product + its options
 router.get('/:slug', async (req, res) => {
   try {
@@ -47,26 +68,6 @@ router.get('/:slug', async (req, res) => {
     }
 
     res.json({ ...product, option_groups: Array.from(groups.values()) });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GET /api/products/meta/hamper-components -> grouped list for the Build Your Own Hamper page
-router.get('/meta/hamper-components', async (req, res) => {
-  try {
-    const rows = await HamperComponent.find().sort({ category: 1, sort_order: 1 }).lean();
-    const groups = new Map();
-    rows.forEach((row) => {
-      if (!groups.has(row.category)) groups.set(row.category, []);
-      groups.get(row.category).push({
-        id: row._id.toString(),
-        name: row.name,
-        price: row.price,
-        description: row.description,
-      });
-    });
-    res.json(Object.fromEntries(groups));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
