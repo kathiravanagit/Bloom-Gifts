@@ -2,6 +2,7 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const cors = require('cors');
 
 const mongoose = require('mongoose');
@@ -42,6 +43,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'bloom-gifts-dev-secret',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/bloomgifts',
+    collectionName: 'sessions',
+  }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 4, // 4 hours
     secure: true,
