@@ -44,8 +44,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 4, // 4 hours
-    secure: isProduction,        // HTTPS only in production
-    sameSite: isProduction ? 'none' : 'lax', // cross-origin cookies on production
+    secure: true,
+    sameSite: 'none',
   },
 }));
 

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('logoutLink').addEventListener('click', async (e) => {
     e.preventDefault();
-    await fetch(window.API_BASE_URL + '/api/admin/logout', { method: 'POST' });
+    await fetch(window.API_BASE_URL + '/api/admin/logout', { method: 'POST', credentials: 'include' });
     window.location.href = 'admin-login.html';
   });
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function checkSession() {
   try {
-    const res = await fetch(window.API_BASE_URL + '/api/admin/session');
+    const res = await fetch(window.API_BASE_URL + '/api/admin/session', { credentials: 'include' });
     return await res.json();
   } catch (err) {
     return { loggedIn: false };
@@ -30,7 +30,7 @@ async function checkSession() {
 async function loadStats() {
   const grid = document.getElementById('statGrid');
   try {
-    const res = await fetch(window.API_BASE_URL + '/api/admin/stats');
+    const res = await fetch(window.API_BASE_URL + '/api/admin/stats', { credentials: 'include' });
     const s = await res.json();
     grid.innerHTML = `
       <div class="stat-card"><div class="stat-label">Total Orders</div><div class="stat-value">${s.totalOrders}</div></div>
@@ -46,7 +46,7 @@ async function loadStats() {
 async function loadOrders() {
   const body = document.getElementById('ordersBody');
   try {
-    const res = await fetch(window.API_BASE_URL + '/api/admin/orders');
+    const res = await fetch(window.API_BASE_URL + '/api/admin/orders', { credentials: 'include' });
     const orders = await res.json();
     if (!orders.length) {
       body.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px;">No orders yet.</td></tr>';
@@ -77,7 +77,7 @@ async function showDetail(orderId) {
   detailView.style.display = 'block';
   detailView.innerHTML = '<p>Loading order&hellip;</p>';
 
-  const res = await fetch(window.API_BASE_URL + `/api/admin/orders/${orderId}`);
+  const res = await fetch(window.API_BASE_URL + `/api/admin/orders/${orderId}`, { credentials: 'include' });
   const order = await res.json();
 
   const itemsHTML = order.items.map((item) => `
@@ -137,6 +137,7 @@ async function showDetail(orderId) {
     const res = await fetch(window.API_BASE_URL + `/api/admin/orders/${orderId}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ status }),
     });
     if (res.ok) {
