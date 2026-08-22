@@ -9,6 +9,8 @@ require('./db/database'); // ensures schema exists on boot
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
+const adminProductsRouter = require('./routes/adminProducts');
+const hamperComponentsRouter = require('./routes/hamperComponents');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +29,8 @@ app.use(session({
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin/products', adminProductsRouter);
+app.use('/api/admin/hamper-components', hamperComponentsRouter);
 
 app.listen(PORT, () => {
   console.log(`Bloom & Gifts server running at http://localhost:${PORT}`);
