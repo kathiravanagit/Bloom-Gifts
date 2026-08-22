@@ -4,6 +4,8 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 
+const mongoose = require('mongoose');
+
 require('./db/database'); // connect to MongoDB
 
 const productRoutes = require('./routes/products');
@@ -45,6 +47,15 @@ app.use(session({
     sameSite: isProduction ? 'none' : 'lax', // cross-origin cookies on production
   },
 }));
+
+// Health Check & Root Route for Render / Uptime Monitoring
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'Bloom & Gifts API', timestamp: new Date() });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
+});
 
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
