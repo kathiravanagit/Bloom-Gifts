@@ -1,4 +1,4 @@
-// Automatically use the deployed backend on production, local backend in dev
-window.API_BASE_URL = window.location.hostname === 'localhost'
+// Automatically switch between local development and deployed Render backend
+window.API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:3000'
-  : 'https://bloom-gifts-backend.onrender.com'; // ← update this after deploying to Render
+  : 'https://bloomgifts.onrender.com';
