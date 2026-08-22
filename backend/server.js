@@ -21,6 +21,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 // Allow both local dev and the deployed Vercel frontend
 const allowedOrigins = [
   'http://localhost:3001',
+  'https://bloomgifts.vercel.app',
   process.env.FRONTEND_URL, // e.g. https://bloom-gifts.vercel.app
 ].filter(Boolean);
 
