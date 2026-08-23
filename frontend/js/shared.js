@@ -97,7 +97,7 @@ function renderHeader() {
 
   el.innerHTML = `
     <div class="nav-wrap">
-      <a href="index.html" class="brand"><span class="brand-mark">${BRAND_MARK_SVG}</span> Bloom &amp; Gifts</a>
+      <a href="index.html" class="brand"><img src="assets/images/favicon.jpg" alt="" class="header-brand-mark"> Bloom &amp; Gifts</a>
       <nav class="nav-links" id="navLinks">
         ${links}
         <a href="cart.html" class="nav-cart">${BAG_ICON_SVG} Cart<span class="cart-count" id="cartCount">0</span></a>
