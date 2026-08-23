@@ -1,114 +1,126 @@
-# Bloom & Gifts — Bouquet & Gift Hamper Store
+# Bloom & Gifts
 
-A final-year capstone e-commerce prototype: bouquets, gift hampers, chocolate hampers, albums and greeting
-cards, with a live product customizer, guest checkout, cash-on-delivery, and an admin dashboard —
-built with **HTML, CSS, vanilla JavaScript, Node.js/Express, and SQLite3**.
+Bloom & Gifts is a full-stack gift shop website for bouquets, gift hampers, chocolate hampers, photo albums, and greeting cards. Customers can browse products, customize selected items, build a hamper, manage a browser-based cart, and place a guest order with Cash on Delivery.
 
-## 1. Requirements
+The project uses a static HTML/CSS/JavaScript frontend and an Express/MongoDB backend. The frontend is deployed on Vercel and the API is deployed separately on Render.
 
-- **Node.js 22.5.0 or newer** (needed for Node's built-in `node:sqlite` module — check with `node -v`;
-  if you're on an older version, install the latest from https://nodejs.org)
+## Features
+
+- Responsive storefront with home, product listing, product detail, about, and contact pages
+- Product browsing by category with product data loaded from the API
+- Product customization for sizes, ribbon colors, add-ons, and other options
+- Build Your Own Hamper workflow with selectable hamper components
+- Cart persistence in browser storage with quantity and item editing
+- Guest checkout with delivery details and Cash on Delivery
+- Order confirmation and order lookup by order number
+- Admin login with session-based authentication
+- Admin dashboard for statistics, orders, products, and hamper components
+- Product and hamper component create, edit, and delete operations
+
+## Technology
+
+- Frontend: HTML5, CSS3, and vanilla JavaScript
+- Backend: Node.js and Express
+- Database: MongoDB with Mongoose
+- Authentication: Express sessions with MongoDB session storage
+- Deployment: Vercel for the frontend and Render for the backend API
+
+## Requirements
+
+- **Node.js 22.5.0 or newer**
+- MongoDB running locally or a MongoDB Atlas connection string
 - A modern browser
 
-This project deliberately uses Node's **built-in** SQLite support instead of a native npm package like
-`better-sqlite3`. Native SQLite packages need to compile a C++ binary on install, which commonly fails
-on locked-down school computers or Windows machines without build tools. The built-in module needs no
-compilation at all — `npm install` only pulls in Express and bcrypt (both pure JavaScript). You'll see a
-one-line `ExperimentalWarning: SQLite is an experimental feature` in the terminal — that's expected and
-harmless, not an error.
-
-## 2. Setup
+## Local setup
 
 ```bash
-# 1. Install dependencies (just Express, express-session and bcryptjs — no native builds)
-npm install
-
-# 2. Create the database and load sample products + the admin account
-npm run seed
-
-# 3. Start the server
+npm run install:all
+npm run seed --prefix backend
 npm start
 ```
 
-Then open **http://localhost:3000** in your browser.
+Create `backend/.env` before seeding:
 
-> Re-running `npm run seed` is safe — it skips seeding if products already exist.
-> To start completely fresh, delete `server/db/bloomgifts.sqlite*` and run `npm run seed` again.
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017/bloomgifts
+SESSION_SECRET=replace-with-a-long-random-secret
+FRONTEND_URL=http://localhost:3001
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin@123
+```
 
-## 3. Demo accounts / test data
+Open the storefront at [http://localhost:3001](http://localhost:3001). The API runs at [http://localhost:3000](http://localhost:3000). The frontend reads the API address from [frontend/config.js](frontend/config.js).
+
+To run services separately, use `npm start --prefix backend` and `npm start --prefix frontend`.
+
+Use a fresh MongoDB database to reset all records. The seed script is [backend/db/seed.js](backend/db/seed.js).
+
+## Demo admin account
 
 | Purpose | Value |
-|---|---|
+| --- | --- |
 | Admin username | `admin` |
-| Admin password | `admin123` |
-| Payment method | Cash on Delivery (only option, by design) |
-| Checkout | Guest only — no account required |
+| Password | `admin@123` |
 
-## 4. Project structure
+Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` before seeding to use different credentials. Do not use demo credentials in production.
 
+## Deployment
+
+### Frontend on Vercel
+
+Vercel serves the `frontend` directory using [vercel.json](vercel.json).
+
+- Website: [https://bloomgifts.vercel.app](https://bloomgifts.vercel.app)
+- Output directory: `frontend`
+- Framework: static site
+
+### Backend on Render
+
+The backend service starts with `npm start` from the `backend` directory.
+
+- API: [https://bloomgifts.onrender.com](https://bloomgifts.onrender.com)
+- Health check: [https://bloomgifts.onrender.com/health](https://bloomgifts.onrender.com/health)
+
+Configure `MONGODB_URI`, `SESSION_SECRET`, `FRONTEND_URL`, `ADMIN_USERNAME`, and `ADMIN_PASSWORD` in Render. Set `FRONTEND_URL` to `https://bloomgifts.vercel.app`.
+
+## Project structure
+
+```text
+bloom-giftsv2/
+├─ package.json              # Root scripts for both services
+├─ vercel.json               # Vercel static frontend configuration
+├─ frontend/
+│  ├─ *.html                 # Storefront, checkout, confirmation, and admin pages
+│  ├─ config.js              # Local and deployed API base URL
+│  ├─ css/style.css          # Shared site styles
+│  ├─ js/                    # Page-specific and shared frontend logic
+│  └─ assets/                # Images and videos
+└─ backend/
+   ├─ server.js              # Express API entry point
+   ├─ db/                    # MongoDB connection and seed data
+   ├─ models/                # Product, order, admin, and hamper schemas
+   ├─ middleware/            # Admin authentication middleware
+   └─ routes/                # Storefront, order, admin, and hamper APIs
 ```
-bloom-gifts/
-├─ server/
-│  ├─ server.js              # Express entry point
-│  ├─ db/
-│  │  ├─ database.js         # SQLite connection + schema (CREATE TABLE ...)
-│  │  └─ seed.js             # Sample products, options, admin user
-│  ├─ routes/
-│  │  ├─ products.js         # GET /api/products, /api/products/:slug
-│  │  ├─ orders.js           # POST /api/orders, GET /api/orders/:orderNumber
-│  │  └─ admin.js            # login/logout/session, orders, stats
-│  └─ middleware/auth.js      # requireAdmin session guard
-├─ public/                   # Everything served to the browser
-│  ├─ index.html / products.html / product-detail.html
-│  ├─ cart.html / checkout.html / confirmation.html
-│  ├─ about.html / contact.html
-│  ├─ admin-login.html / admin-dashboard.html
-│  ├─ css/style.css          # Lavender design system
-│  └─ js/                    # One script per page + shared.js (header/footer/cart helpers)
-└─ package.json
-```
 
-## 5. Database schema
+## API overview
 
-- **products** — category, name, slug, tagline, description, base_price, image, badge
-- **product_options** — grouped, per-product customization choices (size, add-ons, ribbon color, etc.),
-  each with its own `extra_price` and whether it's a single-select or multi-select group
-- **orders** — guest contact + delivery info, payment method, status, total
-- **order_items** — line items per order, including the exact customizations chosen, stored as JSON
-- **admin_users** — one seeded admin account, password stored as a bcrypt hash
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| GET | `/api/products` | List products, optionally filtered by category |
+| GET | `/api/products/:slug` | Get one product and its customization options |
+| GET | `/api/products/meta/hamper-components` | Get public hamper component groups |
+| POST | `/api/orders` | Create a guest order |
+| GET | `/api/orders/:orderNumber` | Retrieve an order confirmation |
+| POST | `/api/admin/login` | Sign in as an administrator |
+| GET | `/api/admin/stats` | Get dashboard statistics |
+| GET | `/api/admin/orders` | List orders for the dashboard |
+| CRUD | `/api/admin/products` | Manage products; admin access required |
+| CRUD | `/api/admin/hamper-components` | Manage hamper components; admin access required |
 
-## 6. Key features and where to find them
+## Notes
 
-| Feature | Where |
-|---|---|
-| Hero image slideshow + embedded video | `index.html` / `js/main.js` |
-| Category browsing + filtering | `products.html` / `js/products.js` |
-| Live hamper/bouquet customizer (options → price updates instantly) | `product-detail.html` / `js/customizer.js` |
-| **Build Your Own Hamper** (combine a base + flowers + sweets + drinks + extras + a card into one custom hamper) | `custom-hamper.html` / `js/custom-hamper.js` / `hamper_components` table |
-| Cart (add, edit quantity, remove) stored per browser session | `cart.html` / `js/cart.js` |
-| Guest checkout with client + server-side validation | `checkout.html` / `js/checkout.js` + `server/routes/orders.js` |
-| Cash on Delivery only | `checkout.html` (payment method is fixed) |
-| Order confirmation rendered from the API response via JS | `confirmation.html` / `js/confirmation.js` |
-| Admin login (bcrypt + session) | `admin-login.html` / `server/routes/admin.js` |
-| Admin dashboard: stats, order list, order detail, status updates | `admin-dashboard.html` / `js/admin-dashboard.js` |
-
-**Catalog:** 20 products across the 5 categories (4–5 per category), each customizable with its own option groups (size, ribbon, assortment, add-ons, etc.), plus 16 standalone components (3 base containers, 3 flower add-ins, 3 sweets, 3 drinks, 3 extras, 1 personalized card) for the hamper builder.
-
-## 7. Design notes (for your project write-up)
-
-- **Palette:** lavender primary `#B497D6`, deep plum `#6B4E8E`, pale lavender background `#F5F0FB`,
-  blush pink `#F6D6E0`, soft gold accent `#C9A227` — chosen to match the brief's lavender theme while
-  keeping enough contrast for accessibility.
-- **Typography:** Fraunces (display/headings) paired with Manrope (body/UI) — a warmer, more
-  characterful pairing than the default serif+sans combo, fitting a boutique gifting brand.
-- **Signature motif:** a recurring "gift tag" detail (a small hanging hole-and-string) marks every
-  product card, and the customizer's price panel is framed as a "gift tag tray" that fills with tag
-  chips as you add options — tying the shop's visual identity to the act of gift-giving itself.
-- **Images/video:** all sourced from Pexels (free to use, no attribution required).
-
-## 8. Known simplifications (intentional scope choices for a class project)
-
-- Payment is Cash on Delivery only — no real payment gateway integration.
-- The contact form shows a confirmation toast but doesn't persist messages (no requirement to store them).
-- Admin session uses an in-memory Express session (fine for a single-instance demo; a production app
-  would use a persistent session store).
+- Payment is intentionally limited to Cash on Delivery.
+- Checkout is guest-only; customer accounts are not implemented.
+- Product images and homepage media are loaded from remote Pexels URLs.
+- Admin sessions require MongoDB and a secure session secret in deployed environments.
