@@ -19,6 +19,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 
+if (isProduction) app.set('trust proxy', 1);
+
 // Allow both local dev and the deployed Vercel frontend
 const allowedOrigins = [
   'http://localhost:3001',

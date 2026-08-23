@@ -305,15 +305,16 @@ async function seed() {
       console.log(`Seeded ${hamperComponents.length} hamper components.`);
     }
 
-    // Seed Admin User
-    const adminRow = await AdminUser.countDocuments();
-    if (adminRow === 0) {
-      const hash = bcrypt.hashSync('admin123', 10);
-      await AdminUser.create({ username: 'admin', password_hash: hash });
-      console.log('Created default admin user -> username: admin / password: admin123');
-    } else {
-      console.log('Admin user already exists, skipping.');
-    }
+    // Ensure the credentials shown on the login page are usable.
+    const adminUsername = process.env.ADMIN_USERNAME || 'admin';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin@123';
+    const hash = bcrypt.hashSync(adminPassword, 10);
+    const admin = await AdminUser.findOneAndUpdate(
+      { username: adminUsername },
+      { username: adminUsername, password_hash: hash },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    console.log(`Ensured admin user -> username: ${admin.username}`);
 
   } catch (error) {
     console.error('Error during seeding:', error);
