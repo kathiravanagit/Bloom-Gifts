@@ -119,7 +119,7 @@ function renderFooter() {
     <div class="container">
       <div class="footer-grid">
         <div>
-          <div class="footer-brand"><span class="brand-mark" style="width:26px;height:26px;">${BRAND_MARK_SVG}</span> Bloom &amp; Gifts</div>
+          <div class="footer-brand"><img src="assets/images/favicon.jpg" alt="" class="footer-brand-mark"> Bloom &amp; Gifts</div>
           <p style="color: rgba(255,255,255,0.7); max-width: 280px;">Handcrafted bouquets and curated gift hampers, arranged with a little lavender magic and delivered with care.</p>
         </div>
         <div>
