@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  document.title = `${product.name} | Bloom & Gifts`;
+  document.title = `${product.name} | G_giftrees`;
   initSelections();
   render();
 });
@@ -223,3 +223,4 @@ function handleAddToCart() {
   document.getElementById('noteCount').textContent = '0';
   updateTray();
 }
+

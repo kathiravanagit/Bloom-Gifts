@@ -1,6 +1,6 @@
-# Bloom & Gifts
+# G_giftrees
 
-Bloom & Gifts is a full-stack gift shop website for bouquets, gift hampers, chocolate hampers, photo albums, and greeting cards. Customers can browse products, customize selected items, build a hamper, manage a browser-based cart, and place a guest order with Cash on Delivery.
+G_giftrees is a full-stack gift shop website for bouquets, gift hampers, chocolate hampers, photo albums, and greeting cards. Customers can browse products, customize selected items, build a hamper, manage a browser-based cart, and place a guest order with Cash on Delivery.
 
 The project uses a static HTML/CSS/JavaScript frontend and an Express/MongoDB backend. The frontend is deployed on Vercel and the API is deployed separately on Render.
 
