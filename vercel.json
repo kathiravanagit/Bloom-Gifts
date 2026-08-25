@@ -1,5 +1,13 @@
 {
-  "buildCommand": null,
-  "outputDirectory": "frontend",
-  "framework": null
+  "version": 2,
+  "routes": [
+    {
+      "src": "^/$",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "^/(.*)$",
+      "dest": "/frontend/$1"
+    }
+  ]
 }
