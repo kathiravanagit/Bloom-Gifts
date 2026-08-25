@@ -3,7 +3,7 @@
 const CART_KEY = 'bloomgifts_cart';
 
 function formatMoney(n) {
-  return '$' + Number(n).toFixed(2);
+  return '₹' + Number(n).toFixed(2);
 }
 
 function getCart() {

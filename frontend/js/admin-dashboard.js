@@ -201,7 +201,12 @@ async function showDetail(orderId) {
               ${STATUS_OPTIONS.map((s) => `<option value="${s}" ${s === order.status ? 'selected' : ''}>${s}</option>`).join('')}
             </select>
           </div>
+          <div class="form-field" style="margin-top:12px;">
+            <label for="amountInput" style="font-size:0.82rem; font-weight:700;">Amount (₹) — set when confirming</label>
+            <input type="number" id="amountInput" min="0" step="0.01" value="${order.total_amount || ''}" placeholder="e.g. 2500" style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:8px;">
+          </div>
           <button class="btn btn-primary btn-block" id="updateStatusBtn">Save Status</button>
+          <button class="btn btn-block" id="deleteOrderBtn" style="margin-top:10px; background:#f6dede; color:#8a1f1f;">Delete Order</button>
         </div>
       </div>
     </div>
@@ -217,17 +222,41 @@ async function showDetail(orderId) {
 
   document.getElementById('updateStatusBtn').addEventListener('click', async () => {
     const status = document.getElementById('statusSelect').value;
+    const amountRaw = document.getElementById('amountInput').value;
+    if (status === 'Confirmed' && (!amountRaw || Number(amountRaw) <= 0)) {
+      showToast('Please enter the order amount (₹) before confirming.');
+      return;
+    }
+    const body = { status };
+    if (amountRaw !== '') body.amount = Number(amountRaw);
     const res = await fetch(window.API_BASE_URL + `/api/admin/orders/${orderId}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(body),
     });
     if (res.ok) {
-      showToast('Order status updated');
+      showToast('Order updated');
       showDetail(orderId);
     } else {
-      showToast('Could not update status');
+      showToast('Could not update order');
+    }
+  });
+
+  document.getElementById('deleteOrderBtn').addEventListener('click', async () => {
+    if (!window.confirm('Delete this order permanently? This cannot be undone.')) return;
+    const res = await fetch(window.API_BASE_URL + `/api/admin/orders/${orderId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    if (res.ok) {
+      showToast('Order deleted');
+      document.getElementById('detailView').style.display = 'none';
+      document.getElementById('listView').style.display = 'block';
+      loadOrders();
+      loadStats();
+    } else {
+      showToast('Could not delete order');
     }
   });
 }

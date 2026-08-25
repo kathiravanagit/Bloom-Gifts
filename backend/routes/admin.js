@@ -72,16 +72,34 @@ router.get('/orders/:id', requireAdmin, async (req, res) => {
   }
 });
 
-// PATCH /api/admin/orders/:id/status -> update order status
+// PATCH /api/admin/orders/:id/status -> update order status (and optional confirmed amount)
 router.patch('/orders/:id/status', requireAdmin, async (req, res) => {
   try {
-    const { status } = req.body || {};
+    const { status, amount } = req.body || {};
     const allowed = ['Pending', 'Confirmed', 'Out for Delivery', 'Delivered', 'Cancelled'];
     if (!allowed.includes(status)) return res.status(400).json({ error: 'Invalid status value.' });
 
-    const order = await Order.findByIdAndUpdate(req.params.id, { status }, { new: true });
+    const update = { status };
+    if (amount !== undefined && amount !== null && amount !== '') {
+      const amt = Number(amount);
+      if (isNaN(amt) || amt < 0) return res.status(400).json({ error: 'Invalid amount.' });
+      update.total_amount = Math.round(amt * 100) / 100;
+    }
+
+    const order = await Order.findByIdAndUpdate(req.params.id, update, { new: true });
     if (!order) return res.status(404).json({ error: 'Order not found' });
-    res.json({ ok: true, status });
+    res.json({ ok: true, status: order.status, total_amount: order.total_amount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/admin/orders/:id -> permanently remove an order
+router.delete('/orders/:id', requireAdmin, async (req, res) => {
+  try {
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -114,6 +132,7 @@ router.get('/stats', requireAdmin, async (req, res) => {
     const totalOrders = await Order.countDocuments();
     
     const revenueAgg = await Order.aggregate([
+      { $match: { status: { $in: ['Confirmed', 'Out for Delivery', 'Delivered'] } } },
       { $group: { _id: null, total: { $sum: '$total_amount' } } }
     ]);
     const totalRevenue = revenueAgg.length > 0 ? revenueAgg[0].total : 0;
