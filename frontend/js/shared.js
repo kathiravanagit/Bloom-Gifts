@@ -138,10 +138,12 @@ function renderFooter() {
           <a href="cart.html">Your cart</a>
         </div>
         <div>
-          <h4>Visit</h4>
-          <a href="tel:+6512345678">+65 1234 5678</a>
-          <a href="mailto:hello@bloomgifts.test">hello@bloomgifts.test</a>
-          <a href="contact.html">12 Petal Lane, Sengkang</a>
+          <h4>Visit our Page</h4>
+          <a href="contact.html">Pondicherry</a>
+          <h4>Call us</h4>
+          <a href="tel:+917845120668">+91 78451 20668</a>
+          <h4>Email</h4>
+          <a href="mailto:ggiftrees31@gmail.com">ggiftrees31@gmail.com</a>
         </div>
       </div>
       <div class="footer-bottom">&copy; ${new Date().getFullYear()} G_giftrees &mdash; a student capstone project. &middot; <a href="admin-login.html" style="color:inherit; text-decoration:underline;">Admin</a></div>
