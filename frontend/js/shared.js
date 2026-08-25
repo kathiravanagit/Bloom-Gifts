@@ -139,14 +139,8 @@ function renderFooter() {
           <a href="cart.html">Your cart</a>
         </div>
         <div>
-          <h4>Visit our Page</h4>
+          <h4>Visit our store</h4>
           <a href="contact.html">Pondicherry</a>
-          <h4>Call us</h4>
-          <a href="tel:+917845120668">+91 78451 20668</a>
-          <h4>Email</h4>
-          <a href="mailto:ggiftrees31@gmail.com">ggiftrees31@gmail.com</a>
-          <h4>Follow us</h4>
-          <a href="https://www.instagram.com/g_giftrees?igsi=cWxlZjJ5c2I4dzI3" target="_blank" rel="noopener" aria-label="Instagram" style="display:inline-flex; align-items:center; gap:8px;">${INSTAGRAM_ICON_SVG}</a>
         </div>
       </div>
       <div class="footer-bottom">&copy; ${new Date().getFullYear()} G_giftrees &mdash; a student capstone project. &middot; <a href="admin-login.html" style="color:inherit; text-decoration:underline;">Admin</a></div>
