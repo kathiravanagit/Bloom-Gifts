@@ -78,6 +78,7 @@ function showToast(message) {
 const BRAND_MARK_SVG = '<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="7.5" r="3.4" fill="white"/><circle cx="12" cy="16.5" r="3.4" fill="white"/><circle cx="7.5" cy="12" r="3.4" fill="white"/><circle cx="16.5" cy="12" r="3.4" fill="white"/><circle cx="12" cy="12" r="3.6" fill="#C9A227"/></svg>';
 const BAG_ICON_SVG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12a2 2 0 0 1-2 1.8H9A2 2 0 0 1 7 20L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
 const MENU_ICON_SVG = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+const INSTAGRAM_ICON_SVG = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17" cy="7" r="1" fill="currentColor" stroke="none"/></svg>';
 
 const NAV_LINKS = [
   { href: 'index.html', label: 'Home', page: 'home' },
@@ -144,6 +145,8 @@ function renderFooter() {
           <a href="tel:+917845120668">+91 78451 20668</a>
           <h4>Email</h4>
           <a href="mailto:ggiftrees31@gmail.com">ggiftrees31@gmail.com</a>
+          <h4>Follow us</h4>
+          <a href="https://www.instagram.com/g_giftrees?igsi=cWxlZjJ5c2I4dzI3" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px;">${INSTAGRAM_ICON_SVG} Instagram</a>
         </div>
       </div>
       <div class="footer-bottom">&copy; ${new Date().getFullYear()} G_giftrees &mdash; a student capstone project. &middot; <a href="admin-login.html" style="color:inherit; text-decoration:underline;">Admin</a></div>
