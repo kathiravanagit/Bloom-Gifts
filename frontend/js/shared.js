@@ -146,7 +146,7 @@ function renderFooter() {
           <h4>Email</h4>
           <a href="mailto:ggiftrees31@gmail.com">ggiftrees31@gmail.com</a>
           <h4>Follow us</h4>
-          <a href="https://www.instagram.com/g_giftrees?igsi=cWxlZjJ5c2I4dzI3" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px;">${INSTAGRAM_ICON_SVG} Instagram</a>
+          <a href="https://www.instagram.com/g_giftrees?igsi=cWxlZjJ5c2I4dzI3" target="_blank" rel="noopener" aria-label="Instagram" style="display:inline-flex; align-items:center; gap:8px;">${INSTAGRAM_ICON_SVG}</a>
         </div>
       </div>
       <div class="footer-bottom">&copy; ${new Date().getFullYear()} G_giftrees &mdash; a student capstone project. &middot; <a href="admin-login.html" style="color:inherit; text-decoration:underline;">Admin</a></div>
