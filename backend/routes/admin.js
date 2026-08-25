@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const AdminUser = require('../models/AdminUser');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
+const ContactMessage = require('../models/ContactMessage');
 const { requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
@@ -86,6 +87,27 @@ router.patch('/orders/:id/status', requireAdmin, async (req, res) => {
   }
 });
 
+// GET /api/admin/messages -> list client contact messages (newest first)
+router.get('/messages', requireAdmin, async (req, res) => {
+  try {
+    const messages = await ContactMessage.find().sort({ created_at: -1 }).lean();
+    res.json(messages.map(m => ({ ...m, id: m._id.toString() })));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PATCH /api/admin/messages/:id -> mark a message as read
+router.patch('/messages/:id', requireAdmin, async (req, res) => {
+  try {
+    const msg = await ContactMessage.findByIdAndUpdate(req.params.id, { read: true }, { new: true });
+    if (!msg) return res.status(404).json({ error: 'Message not found' });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/admin/stats -> quick dashboard numbers
 router.get('/stats', requireAdmin, async (req, res) => {
   try {
@@ -97,6 +119,8 @@ router.get('/stats', requireAdmin, async (req, res) => {
     const totalRevenue = revenueAgg.length > 0 ? revenueAgg[0].total : 0;
     
     const pending = await Order.countDocuments({ status: 'Pending' });
+    
+    const unreadMessages = await ContactMessage.countDocuments({ read: false });
     
     const categoryAgg = await Order.aggregate([
       { $unwind: '$items' },
@@ -120,6 +144,7 @@ router.get('/stats', requireAdmin, async (req, res) => {
       totalOrders,
       totalRevenue,
       pending,
+      unreadMessages,
       topCategory,
     });
   } catch (err) {

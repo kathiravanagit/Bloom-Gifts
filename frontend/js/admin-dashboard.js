@@ -14,9 +14,92 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.location.href = 'admin-login.html';
   });
 
+  document.getElementById('dashboardNav').addEventListener('click', (e) => {
+    e.preventDefault();
+    setActiveNav('dashboardNav');
+    document.getElementById('messagesView').style.display = 'none';
+    document.getElementById('detailView').style.display = 'none';
+    document.getElementById('listView').style.display = 'block';
+    loadOrders();
+    loadStats();
+  });
+
+  document.getElementById('messagesNav').addEventListener('click', (e) => {
+    e.preventDefault();
+    setActiveNav('messagesNav');
+    document.getElementById('listView').style.display = 'none';
+    document.getElementById('detailView').style.display = 'none';
+    document.getElementById('messagesView').style.display = 'block';
+    loadMessages();
+  });
+
   loadStats();
   loadOrders();
+  loadMessageBadge();
 });
+
+function setActiveNav(id) {
+  document.querySelectorAll('.nav-links-admin a').forEach(a => a.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+async function loadMessageBadge() {
+  try {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/messages', { credentials: 'include' });
+    const messages = await res.json();
+    const unread = messages.filter(m => !m.read).length;
+    const badge = document.getElementById('msgBadge');
+    if (unread > 0) {
+      badge.textContent = unread;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch (err) { /* ignore */ }
+}
+
+async function loadMessages() {
+  const mv = document.getElementById('messagesView');
+  mv.innerHTML = '<h2 style="margin-bottom:6px;">Message from Client</h2><p style="margin-bottom:20px;">Messages sent through the contact form.</p><div id="messagesList"></div>';
+  try {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/messages', { credentials: 'include' });
+    const messages = await res.json();
+    const list = document.getElementById('messagesList');
+    if (!messages.length) {
+      list.innerHTML = '<p style="text-align:center; padding:30px;">No messages yet.</p>';
+      return;
+    }
+    list.innerHTML = messages.map((m) => `
+      <div class="admin-table-card message-card" data-id="${m.id}" style="padding:20px; margin-bottom:14px; cursor:pointer; border-left:4px solid ${m.read ? 'transparent' : 'var(--plum-deep)'};">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong>${escapeHtml(m.name)}</strong>
+          <span style="font-size:0.8rem; color:var(--charcoal-soft);">${new Date(m.created_at).toLocaleString()}</span>
+        </div>
+        <div style="font-size:0.85rem; color:var(--charcoal-soft); margin:4px 0;">${escapeHtml(m.email)}</div>
+        <p style="margin:8px 0 0;">${escapeHtml(m.message)}</p>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('.message-card').forEach((card) => {
+      card.addEventListener('click', () => markMessageRead(card.dataset.id));
+    });
+  } catch (err) {
+    mv.innerHTML += '<p>Could not load messages.</p>';
+  }
+}
+
+async function markMessageRead(id) {
+  try {
+    await fetch(window.API_BASE_URL + `/api/admin/messages/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    });
+  } catch (err) { /* ignore */ }
+  loadMessages();
+  loadMessageBadge();
+}
 
 async function checkSession() {
   try {
@@ -36,7 +119,7 @@ async function loadStats() {
       <div class="stat-card"><div class="stat-label">Total Orders</div><div class="stat-value">${s.totalOrders}</div></div>
       <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-value">${formatMoney(s.totalRevenue)}</div></div>
       <div class="stat-card"><div class="stat-label">Pending Orders</div><div class="stat-value">${s.pending}</div></div>
-      <div class="stat-card"><div class="stat-label">Top Category</div><div class="stat-value" style="font-size:1.2rem; text-transform:capitalize;">${s.topCategory}</div></div>
+      <div class="stat-card"><div class="stat-label">New Messages</div><div class="stat-value">${s.unreadMessages || 0}</div></div>
     `;
   } catch (err) {
     grid.innerHTML = '<p>Could not load stats.</p>';

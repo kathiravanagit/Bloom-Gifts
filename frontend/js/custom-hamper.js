@@ -28,7 +28,7 @@ const SECTION_META = {
   },
 };
 
-const HAMPER_PREVIEW_IMAGE = 'https://images.pexels.com/photos/1666069/pexels-photo-1666069.jpeg?auto=compress&cs=tinysrgb&w=800';
+const HAMPER_PREVIEW_IMAGE = 'assets/images/pr3.jpeg';
 
 let componentGroups = {};
 let selections = {}; // category -> component object (base) or array of component objects (others)

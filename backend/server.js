@@ -14,6 +14,7 @@ const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
 const adminProductsRouter = require('./routes/adminProducts');
 const hamperComponentsRouter = require('./routes/hamperComponents');
+const contactRoutes = require('./routes/contact');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -78,6 +79,7 @@ app.get('/health', (req, res) => {
 
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/products', adminProductsRouter);
 app.use('/api/admin/hamper-components', hamperComponentsRouter);

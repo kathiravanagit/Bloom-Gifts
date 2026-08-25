@@ -67,10 +67,27 @@
 <script src="/config.js"></script>
   <script src="js/shared.js"></script>
 <script>
-  document.getElementById('contactForm').addEventListener('submit', (e) => {
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    showToast("Thanks! We'll get back to you shortly.");
-    e.target.reset();
+    const name = document.getElementById('c_name').value.trim();
+    const email = document.getElementById('c_email').value.trim();
+    const message = document.getElementById('c_message').value.trim();
+    if (!name || !email || !message) {
+      showToast('Please fill in all fields.');
+      return;
+    }
+    try {
+      const res = await fetch(window.API_BASE_URL + '/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (!res.ok) throw new Error('failed');
+      showToast("Thanks! We'll get back to you shortly.");
+      e.target.reset();
+    } catch (err) {
+      showToast('Could not send your message. Please try again.');
+    }
   });
 </script>
 </body>

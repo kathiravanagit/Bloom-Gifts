@@ -125,7 +125,7 @@ function renderFooter() {
         </div>
         <div>
           <h4>Shop</h4>
-          <a href="products.html?category=bouquets">Bouquets</a>
+          <a href="products.html?category=bouquets">AllCustomized Bouquets</a>
           <a href="products.html?category=hampers">Gift Hampers</a>
           <a href="products.html?category=chocolate">Chocolate Hampers</a>
           <a href="products.html?category=albums">Albums</a>
