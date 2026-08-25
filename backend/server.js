@@ -69,7 +69,7 @@ app.use(session({
 
 // Health Check & Root Route for Render / Uptime Monitoring
 app.get('/', (req, res) => {
-  res.json({ status: 'ok', service: 'Bloom & Gifts API', timestamp: new Date() });
+  res.json({ status: 'ok', service: 'G_giftrees API', timestamp: new Date() });
 });
 
 app.get('/health', (req, res) => {
@@ -83,5 +83,5 @@ app.use('/api/admin/products', adminProductsRouter);
 app.use('/api/admin/hamper-components', hamperComponentsRouter);
 
 app.listen(PORT, () => {
-  console.log(`Bloom & Gifts server running at http://localhost:${PORT}`);
+  console.log(`G_giftrees server running at http://localhost:${PORT}`);
 });

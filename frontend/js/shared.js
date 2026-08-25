@@ -97,7 +97,7 @@ function renderHeader() {
 
   el.innerHTML = `
     <div class="nav-wrap">
-      <a href="index.html" class="brand"><img src="assets/images/favicon.jpg" alt="" class="header-brand-mark"> Bloom &amp; Gifts</a>
+      <a href="index.html" class="brand"><img src="assets/images/favicon.jpg" alt="" class="header-brand-mark"> G_giftrees</a>
       <nav class="nav-links" id="navLinks">
         ${links}
         <a href="cart.html" class="nav-cart">${BAG_ICON_SVG} Cart<span class="cart-count" id="cartCount">0</span></a>
@@ -119,7 +119,7 @@ function renderFooter() {
     <div class="container">
       <div class="footer-grid">
         <div>
-          <div class="footer-brand"><img src="assets/images/favicon.jpg" alt="" class="footer-brand-mark"> Bloom &amp; Gifts</div>
+          <div class="footer-brand"><img src="assets/images/favicon.jpg" alt="" class="footer-brand-mark"> G_giftrees</div>
           <p style="color: rgba(255,255,255,0.7); max-width: 280px;">Handcrafted bouquets and curated gift hampers, arranged with a little lavender magic and delivered with care.</p>
         </div>
         <div>
@@ -144,7 +144,7 @@ function renderFooter() {
           <a href="contact.html">12 Petal Lane, Sengkang</a>
         </div>
       </div>
-      <div class="footer-bottom">&copy; ${new Date().getFullYear()} Bloom &amp; Gifts &mdash; a student capstone project. &middot; <a href="admin-login.html" style="color:inherit; text-decoration:underline;">Admin</a></div>
+      <div class="footer-bottom">&copy; ${new Date().getFullYear()} G_giftrees &mdash; a student capstone project. &middot; <a href="admin-login.html" style="color:inherit; text-decoration:underline;">Admin</a></div>
     </div>
   `;
 }

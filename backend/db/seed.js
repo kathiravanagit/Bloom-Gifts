@@ -265,7 +265,7 @@ const hamperComponents = [
 async function seed() {
   try {
     await mongoose.connect(MONGODB_URI);
-    console.log(`[Bloom & Gifts] Connected to MongoDB at ${MONGODB_URI}`);
+    console.log(`[G_giftrees] Connected to MongoDB at ${MONGODB_URI}`);
 
     // Seed Products
     const countRow = await Product.countDocuments();
