@@ -66,7 +66,7 @@ function renderSections() {
           <span class="component-icon">${meta.icon}</span>
           <span class="component-name">${item.name}</span>
           <span class="component-desc">${item.description || ''}</span>
-          <span class="component-price">+${formatMoney(item.price)}</span>
+          <span class="component-price">Custom</span>
         </button>
       `;
     }).join('');
@@ -130,7 +130,7 @@ function updateSummary() {
 
   const unitPrice = computeTotal();
   const total = round2(unitPrice * quantity);
-  document.getElementById('builderTotal').textContent = formatMoney(total);
+  document.getElementById('builderTotal').textContent = 'Custom';
 
   const addBtn = document.getElementById('builderAddToCart');
   if (!selections.base) {
@@ -138,7 +138,7 @@ function updateSummary() {
     addBtn.textContent = 'Choose a base first';
   } else {
     addBtn.disabled = false;
-    addBtn.textContent = `Add Hamper to Cart — ${formatMoney(total)}`;
+    addBtn.textContent = `Add Hamper to Cart — Custom`;
   }
 }
 
