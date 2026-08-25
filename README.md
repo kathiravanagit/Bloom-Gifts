@@ -41,14 +41,6 @@ npm start
 
 Create `backend/.env` before seeding:
 
-```env
-MONGODB_URI=mongodb://127.0.0.1:27017/bloomgifts
-SESSION_SECRET=replace-with-a-long-random-secret
-FRONTEND_URL=http://localhost:3001
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=admin@123
-```
-
 Open the storefront at [http://localhost:3001](http://localhost:3001). The API runs at [http://localhost:3000](http://localhost:3000). The frontend reads the API address from [frontend/config.js](frontend/config.js).
 
 To run services separately, use `npm start --prefix backend` and `npm start --prefix frontend`.
@@ -70,7 +62,7 @@ Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` before seeding to use different creden
 
 Vercel serves the `frontend` directory using [vercel.json](vercel.json).
 
-- Website: [https://bloomgifts.vercel.app](https://bloomgifts.vercel.app)
+- Website: [https://ggiftrees.vercel.app/]
 - Output directory: `frontend`
 - Framework: static site
 
