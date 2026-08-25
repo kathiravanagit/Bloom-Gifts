@@ -37,9 +37,9 @@ function renderCart() {
       </div>
       <div class="summary-card">
         <h3 style="margin-bottom:18px;">Order Summary</h3>
-        <div class="summary-row"><span>Subtotal</span><span>${formatMoney(subtotal)}</span></div>
-        <div class="summary-row"><span>Delivery Fee</span><span>${formatMoney(DELIVERY_FEE)}</span></div>
-        <div class="summary-row total"><span>Total</span><span>${formatMoney(total)}</span></div>
+        <div class="summary-row"><span>Subtotal</span><span>Custom</span></div>
+        <div class="summary-row"><span>Delivery Fee</span><span>Custom</span></div>
+        <div class="summary-row total"><span>Total</span><span>Custom</span></div>
         <a href="checkout.html" class="btn btn-primary btn-block" style="margin-top:18px;">Proceed to Checkout</a>
         <a href="products.html" class="btn btn-outline btn-block" style="margin-top:10px;">Continue Shopping</a>
       </div>
@@ -83,7 +83,7 @@ function cartItemHTML(item, index) {
         <a href="#" class="remove-link" data-action="remove" data-index="${index}">Remove</a>
       </div>
       <div style="text-align:right; font-weight:800; color:var(--plum-deep); font-family:var(--font-display); font-size:1.1rem;">
-        ${formatMoney(item.subtotal)}
+        Custom
       </div>
     </div>
   `;

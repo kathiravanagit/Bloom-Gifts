@@ -163,8 +163,8 @@ function productCardHTML(p) {
         <p class="product-tagline">${p.tagline || ''}</p>
         <div class="product-price-row">
           <div>
-            <div class="price-from">From</div>
-            <div class="price">${formatMoney(p.base_price)}</div>
+            <div class="price-from">Price</div>
+            <div class="price">Custom</div>
           </div>
           <span class="btn btn-outline" style="padding:8px 16px; font-size:0.8rem;">Customize</span>
         </div>

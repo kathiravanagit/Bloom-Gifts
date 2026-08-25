@@ -18,9 +18,9 @@ function renderSummary(cart) {
 
   const subtotal = cartTotal();
   const total = round2(subtotal + DELIVERY_FEE);
-  document.getElementById('sumSubtotal').textContent = formatMoney(subtotal);
-  document.getElementById('sumDelivery').textContent = formatMoney(DELIVERY_FEE);
-  document.getElementById('sumTotal').textContent = formatMoney(total);
+  document.getElementById('sumSubtotal').textContent = 'Custom';
+  document.getElementById('sumDelivery').textContent = 'Custom';
+  document.getElementById('sumTotal').textContent = 'Custom';
 }
 
 function setFieldError(id, hasError) {
@@ -32,9 +32,6 @@ function validateForm() {
   const name = document.getElementById('guest_name').value.trim();
   const mobile = document.getElementById('mobile').value.trim();
   const email = document.getElementById('email').value.trim();
-  const city = document.getElementById('city').value.trim();
-  const address = document.getElementById('address').value.trim();
-  const postal = document.getElementById('postal_code').value.trim();
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const mobileOk = /^[0-9+\-\s]{7,15}$/.test(mobile);
@@ -42,11 +39,8 @@ function validateForm() {
   setFieldError('guest_name', !name);
   setFieldError('mobile', !mobileOk);
   setFieldError('email', !emailOk);
-  setFieldError('city', !city);
-  setFieldError('address', !address);
-  setFieldError('postal_code', !postal);
 
-  return name && mobileOk && emailOk && city && address && postal;
+  return name && mobileOk && emailOk;
 }
 
 async function handleSubmit(e) {
@@ -65,9 +59,6 @@ async function handleSubmit(e) {
     guest_name: document.getElementById('guest_name').value.trim(),
     email: document.getElementById('email').value.trim(),
     mobile: document.getElementById('mobile').value.trim(),
-    address: document.getElementById('address').value.trim(),
-    city: document.getElementById('city').value.trim(),
-    postal_code: document.getElementById('postal_code').value.trim(),
     gift_note: document.getElementById('gift_note').value.trim(),
     payment_method: 'Cash on Delivery',
     items: cart.map((i) => ({

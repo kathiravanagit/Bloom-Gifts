@@ -14,16 +14,13 @@ function badRequest(res, message) {
 router.post('/', async (req, res) => {
   try {
     const {
-      guest_name, email, mobile, address, city, postal_code,
+      guest_name, email, mobile,
       gift_note, payment_method, items,
     } = req.body || {};
 
     if (!guest_name || !guest_name.trim()) return badRequest(res, 'Full name is required.');
     if (!email || !EMAIL_RE.test(email)) return badRequest(res, 'A valid email address is required.');
     if (!mobile || !MOBILE_RE.test(mobile)) return badRequest(res, 'A valid mobile number is required.');
-    if (!address || !address.trim()) return badRequest(res, 'Delivery address is required.');
-    if (!city || !city.trim()) return badRequest(res, 'City is required.');
-    if (!postal_code || !postal_code.trim()) return badRequest(res, 'Postal code is required.');
     if (!Array.isArray(items) || items.length === 0) return badRequest(res, 'Your cart is empty.');
 
     for (const item of items) {
@@ -44,9 +41,6 @@ router.post('/', async (req, res) => {
       guest_name: guest_name.trim(),
       email: email.trim(),
       mobile: mobile.trim(),
-      address: address.trim(),
-      city: city.trim(),
-      postal_code: postal_code.trim(),
       gift_note: (gift_note || '').trim(),
       payment_method: payment_method || 'Cash on Delivery',
       total_amount: computedTotal,

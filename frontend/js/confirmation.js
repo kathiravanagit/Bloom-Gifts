@@ -48,7 +48,7 @@ function render(order) {
         <strong>${item.quantity} &times; ${item.product_name}</strong><br>
         <span style="font-size:0.82rem; color:var(--charcoal-soft);">${customizationLine(item.customizations)}</span>
       </div>
-      <div>${formatMoney(item.subtotal)}</div>
+      <div>Custom</div>
     </div>
   `).join('');
 
@@ -62,13 +62,12 @@ function render(order) {
       <div class="confirm-detail-card">
         <h4>Items</h4>
         ${itemsHTML}
-        <div class="summary-row total" style="margin-top:14px;"><span>Total</span><span>${formatMoney(order.total_amount)}</span></div>
+        <div class="summary-row total" style="margin-top:14px;"><span>Total</span><span>Custom</span></div>
       </div>
 
       <div class="confirm-detail-card" style="margin-top:20px;">
-        <h4>Delivery Details</h4>
+        <h4>Contact Details</h4>
         <p style="margin:0;"><strong>${escapeHtml(order.guest_name)}</strong><br>
-        ${escapeHtml(order.address)}, ${escapeHtml(order.city)} ${escapeHtml(order.postal_code)}<br>
         ${escapeHtml(order.mobile)} &middot; ${escapeHtml(order.email)}</p>
         ${order.gift_note ? `<p style="margin-top:10px;"><strong>Note:</strong> ${escapeHtml(order.gift_note)}</p>` : ''}
       </div>

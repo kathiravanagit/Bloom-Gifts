@@ -71,9 +71,9 @@ function render() {
         <div class="tag-tray">
           <h4>Your gift includes</h4>
           <div class="tag-chips" id="tagChips"></div>
-          <div class="price-dial">
+           <div class="price-dial">
             <span class="label">Total</span>
-            <span class="amount" id="priceAmount">${formatMoney(product.base_price)}</span>
+            <span class="amount" id="priceAmount">Custom</span>
           </div>
         </div>
 
@@ -86,7 +86,7 @@ function render() {
           </div>
         </div>
 
-        <button class="btn btn-primary btn-block" id="addToCartBtn">Add to Cart &mdash; <span id="btnPrice">${formatMoney(product.base_price)}</span></button>
+        <button class="btn btn-primary btn-block" id="addToCartBtn">Add to Cart &mdash; <span id="btnPrice">Custom</span></button>
         <p style="margin-top:14px;"><a href="products.html">&larr; Back to shop</a></p>
       </div>
     </div>
@@ -117,7 +117,6 @@ function renderOptionGroups() {
         <label class="option-pill ${isChecked ? 'selected' : ''}" data-group="${gIdx}" data-option="${opt.id}">
           <input type="${inputType}" name="group-${gIdx}" ${isChecked ? 'checked' : ''}>
           ${opt.name}
-          ${opt.extra_price > 0 ? `<span class="extra">+${formatMoney(opt.extra_price)}</span>` : ''}
         </label>
       `;
     }).join('');
@@ -188,12 +187,12 @@ function updateTray() {
   const unitPrice = computeUnitPrice();
   const total = round2(unitPrice * quantity);
   const amountEl = document.getElementById('priceAmount');
-  amountEl.textContent = formatMoney(total);
+  amountEl.textContent = 'Custom';
   amountEl.classList.remove('bump');
   void amountEl.offsetWidth; // restart animation
   amountEl.classList.add('bump');
 
-  document.getElementById('btnPrice').textContent = formatMoney(total);
+  document.getElementById('btnPrice').textContent = 'Custom';
 }
 
 function handleAddToCart() {
