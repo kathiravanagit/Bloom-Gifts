@@ -83,7 +83,7 @@ function renderSections() {
   wrap.querySelectorAll('.component-card').forEach((card) => {
     card.addEventListener('click', () => {
       const cat = card.dataset.cat;
-      const id = Number(card.dataset.id);
+      const id = card.dataset.id;
       const item = componentGroups[cat].find((c) => c.id === id);
 
       if (cat === 'base') {
