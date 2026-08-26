@@ -31,7 +31,7 @@ async function loadProducts(category) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const products = await res.json();
     if (!products.length) {
-      grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No products in this category yet.</p>';
+      grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Yet to add &mdash; this category is coming soon.</p>';
       return;
     }
     grid.innerHTML = products.map(productCardHTML).join('');

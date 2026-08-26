@@ -66,28 +66,43 @@ async function loadMessageBadge() {
 
 async function loadMessages() {
   const mv = document.getElementById('messagesView');
-  mv.innerHTML = '<h2 style="margin-bottom:6px;">Message from Client</h2><p style="margin-bottom:20px;">Messages sent through the contact form.</p><div id="messagesList"></div>';
+  mv.innerHTML = '<h2 style="margin-bottom:6px;">Message from Client</h2><p style="margin-bottom:16px; color:var(--charcoal-soft);">Loading…</p>';
   try {
     const res = await fetch(window.API_BASE_URL + '/api/admin/messages', { credentials: 'include' });
     const messages = await res.json();
+    const unread = messages.filter((m) => !m.read).length;
+    mv.innerHTML = `
+      <h2 style="margin-bottom:6px;">Message from Client</h2>
+      <p style="margin-bottom:16px; color:var(--charcoal-soft);">Messages sent through the contact form. Click a message to mark it read. (${messages.length} total${messages.length === 1 ? '' : 's'}, ${unread} unread)</p>
+      <div id="messagesList"></div>
+    `;
     const list = document.getElementById('messagesList');
     if (!messages.length) {
-      list.innerHTML = '<p style="text-align:center; padding:30px;">No messages yet.</p>';
+      list.innerHTML = '<p style="text-align:center; padding:30px; color:var(--charcoal-soft);">No messages yet.</p>';
       return;
     }
     list.innerHTML = messages.map((m) => `
-      <div class="admin-table-card message-card" data-id="${m.id}" style="padding:20px; margin-bottom:14px; cursor:pointer; border-left:4px solid ${m.read ? 'transparent' : 'var(--plum-deep)'};">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <strong>${escapeHtml(m.name)}</strong>
-          <span style="font-size:0.8rem; color:var(--charcoal-soft);">${new Date(m.created_at).toLocaleString()}</span>
+      <div class="admin-table-card message-card" data-id="${m.id}" style="padding:18px 20px; margin-bottom:14px; cursor:pointer; border-left:4px solid ${m.read ? '#e3ddd6' : 'var(--plum-deep)'};">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <strong>${escapeHtml(m.name)}</strong>
+            ${m.read ? '' : '<span style="background:var(--plum-deep); color:#fff; border-radius:12px; padding:1px 9px; font-size:0.72rem;">New</span>'}
+          </div>
+          <button class="btn btn-outline msg-delete" data-del="${m.id}" style="padding:4px 10px; background:#f6dede; color:#8a1f1f; border-color:#f6dede;">Delete</button>
         </div>
-        <div style="font-size:0.85rem; color:var(--charcoal-soft); margin:4px 0;">${escapeHtml(m.email)}</div>
-        <p style="margin:8px 0 0;">${escapeHtml(m.message)}</p>
+        <div style="font-size:0.82rem; color:var(--charcoal-soft); margin:6px 0;">${escapeHtml(m.email)} &middot; ${new Date(m.created_at).toLocaleString()}</div>
+        <p style="margin:6px 0 0; white-space:pre-wrap;">${escapeHtml(m.message)}</p>
       </div>
     `).join('');
 
     list.querySelectorAll('.message-card').forEach((card) => {
       card.addEventListener('click', () => markMessageRead(card.dataset.id));
+    });
+    list.querySelectorAll('.msg-delete').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteMessage(btn.dataset.del);
+      });
     });
   } catch (err) {
     mv.innerHTML += '<p>Could not load messages.</p>';
@@ -104,6 +119,25 @@ async function markMessageRead(id) {
   } catch (err) { /* ignore */ }
   loadMessages();
   loadMessageBadge();
+}
+
+async function deleteMessage(id) {
+  if (!confirm('Delete this message?')) return;
+  try {
+    const res = await fetch(window.API_BASE_URL + `/api/admin/messages/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    if (res.ok) {
+      showToast('Message deleted');
+      loadMessages();
+      loadMessageBadge();
+    } else {
+      showToast('Could not delete message');
+    }
+  } catch (err) {
+    showToast('Could not delete message');
+  }
 }
 
 async function checkSession() {

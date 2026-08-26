@@ -190,33 +190,6 @@ const products = [
     ],
   },
 
-  // ---- Albums (ha7, ha8) — TEMPORARY listings, real products coming later ----
-  {
-    category: 'albums', name: 'Photo Memory Album', slug: 'photo-memory-album',
-    tagline: 'Temporary listing — real product coming soon.',
-    description: 'Placeholder album listing. The real product will be added soon.',
-    base_price: 24.90, image: 'assets/images/ha7.jpeg', badge: 'Coming Soon', options: [],
-  },
-  {
-    category: 'albums', name: 'Keepsake Scrapbook', slug: 'keepsake-scrapbook',
-    tagline: 'Temporary listing — real product coming soon.',
-    description: 'Placeholder album listing. The real product will be added soon.',
-    base_price: 29.90, image: 'assets/images/ha8.jpeg', badge: 'Coming Soon', options: [],
-  },
-
-  // ---- Greeting Cards (ha9, ha10) — TEMPORARY listings, real products coming later ----
-  {
-    category: 'cards', name: 'Floral Greeting Card', slug: 'floral-greeting-card',
-    tagline: 'Temporary listing — real product coming soon.',
-    description: 'Placeholder greeting card listing. The real product will be added soon.',
-    base_price: 5.90, image: 'assets/images/ha9.jpeg', badge: 'Coming Soon', options: [],
-  },
-  {
-    category: 'cards', name: 'Script Greeting Card', slug: 'script-greeting-card',
-    tagline: 'Temporary listing — real product coming soon.',
-    description: 'Placeholder greeting card listing. The real product will be added soon.',
-    base_price: 5.90, image: 'assets/images/ha10.jpeg', badge: 'Coming Soon', options: [],
-  },
 ];
 
 const hamperComponents = [

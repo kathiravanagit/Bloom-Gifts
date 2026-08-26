@@ -126,6 +126,17 @@ router.patch('/messages/:id', requireAdmin, async (req, res) => {
   }
 });
 
+// DELETE /api/admin/messages/:id -> delete a client message
+router.delete('/messages/:id', requireAdmin, async (req, res) => {
+  try {
+    const msg = await ContactMessage.findByIdAndDelete(req.params.id);
+    if (!msg) return res.status(404).json({ error: 'Message not found' });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/admin/stats -> quick dashboard numbers
 router.get('/stats', requireAdmin, async (req, res) => {
   try {
