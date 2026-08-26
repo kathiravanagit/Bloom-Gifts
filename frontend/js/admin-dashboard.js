@@ -33,11 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadMessages();
   });
 
-  document.getElementById('productsNav').addEventListener('click', (e) => {
-    e.preventDefault();
-    openProductsView();
-  });
-
   loadStats();
   loadOrders();
   loadMessageBadge();
@@ -145,7 +140,7 @@ async function loadOrders() {
         <td><strong>${o.order_number}</strong></td>
         <td>${escapeHtml(o.guest_name)}</td>
         <td>${new Date(o.created_at).toLocaleString()}</td>
-        <td>${formatMoney(o.total_amount)}</td>
+        <td>${o.total_amount ? formatMoney(o.total_amount) : 'TBD'}</td>
         <td><span class="status-pill status-${o.status.replace(/\s+/g, '-')}">${o.status}</span></td>
       </tr>
     `).join('');
@@ -186,7 +181,7 @@ async function showDetail(orderId) {
       <div class="admin-table-card" style="padding:24px;">
         <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin-bottom:14px;">Items</h4>
         ${itemsHTML}
-        <div class="summary-row total" style="margin-top:14px;"><span>Total</span><span>${formatMoney(order.total_amount)}</span></div>
+        <div class="summary-row total" style="margin-top:14px;"><span>Total</span><span>${order.total_amount ? formatMoney(order.total_amount) : 'TBD'}</span></div>
       </div>
 
       <div>

@@ -1,5 +1,3 @@
-const DELIVERY_FEE = 4.90;
-
 document.addEventListener('DOMContentLoaded', renderCart);
 
 function customizationSummary(c) {
@@ -26,7 +24,6 @@ function renderCart() {
   }
 
   const subtotal = cartTotal();
-  const total = round2(subtotal + DELIVERY_FEE);
 
   root.innerHTML = `
     <div class="cart-layout">
@@ -38,8 +35,7 @@ function renderCart() {
       <div class="summary-card">
         <h3 style="margin-bottom:18px;">Order Summary</h3>
         <div class="summary-row"><span>Subtotal</span><span>Custom</span></div>
-        <div class="summary-row"><span>Delivery Fee</span><span>Custom</span></div>
-        <div class="summary-row total"><span>Total</span><span>Custom</span></div>
+        <div class="summary-row total"><span>Total</span><span>To be confirmed by shop</span></div>
         <a href="checkout.html" class="btn btn-primary btn-block" style="margin-top:18px;">Proceed to Checkout</a>
         <a href="products.html" class="btn btn-outline btn-block" style="margin-top:10px;">Continue Shopping</a>
       </div>

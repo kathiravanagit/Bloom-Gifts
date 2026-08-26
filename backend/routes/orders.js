@@ -29,9 +29,6 @@ router.post('/', async (req, res) => {
       }
     }
 
-    const rawTotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
-    const computedTotal = Math.round(rawTotal * 100) / 100;
-
     // Generate a unique, collision-free order number (safe even after deletions)
     let savedOrder = null;
     for (let attempt = 0; attempt < 5 && !savedOrder; attempt++) {
@@ -50,7 +47,7 @@ router.post('/', async (req, res) => {
         mobile: mobile.trim(),
         gift_note: (gift_note || '').trim(),
         payment_method: payment_method || 'Cash on Delivery',
-        total_amount: computedTotal,
+        total_amount: 0,
         items: items.map(item => ({
           product_id: item.product_id || null,
           product_name: item.product_name,

@@ -1,5 +1,3 @@
-const DELIVERY_FEE = 4.90;
-
 document.addEventListener('DOMContentLoaded', () => {
   const cart = getCart();
   if (!cart.length) {
@@ -16,11 +14,8 @@ function renderSummary(cart) {
     <div class="summary-row"><span>${item.quantity} &times; ${item.product_name}</span><span>${formatMoney(item.subtotal)}</span></div>
   `).join('');
 
-  const subtotal = cartTotal();
-  const total = round2(subtotal + DELIVERY_FEE);
   document.getElementById('sumSubtotal').textContent = 'Custom';
-  document.getElementById('sumDelivery').textContent = 'Custom';
-  document.getElementById('sumTotal').textContent = 'Custom';
+  document.getElementById('sumTotal').textContent = 'To be confirmed by shop';
 }
 
 function setFieldError(id, hasError) {
@@ -60,7 +55,7 @@ async function handleSubmit(e) {
     email: document.getElementById('email').value.trim(),
     mobile: document.getElementById('mobile').value.trim(),
     gift_note: document.getElementById('gift_note').value.trim(),
-    payment_method: 'Cash on Delivery',
+    payment_method: 'Pay at Shop',
     items: cart.map((i) => ({
       product_id: i.product_id,
       product_name: i.product_name,
@@ -68,10 +63,7 @@ async function handleSubmit(e) {
       unit_price: i.unit_price,
       customizations: i.customizations,
       subtotal: round2(i.subtotal),
-    })).concat([{
-      product_id: null, product_name: 'Delivery Fee', quantity: 1,
-      unit_price: DELIVERY_FEE, customizations: {}, subtotal: DELIVERY_FEE,
-    }]),
+    })),
   };
 
   try {
