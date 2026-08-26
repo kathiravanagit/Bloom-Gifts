@@ -327,7 +327,7 @@ async function loadProductsList() {
     const res = await fetch(window.API_BASE_URL + '/api/admin/products', { credentials: 'include' });
     const items = await res.json();
     if (!items.length) { el.innerHTML = '<p>No products yet.</p>'; return; }
-    el.innerHTML = `<table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Image</th><th></th></tr></thead><tbody>
+    el.innerHTML = `<div class="table-scroll"><table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Image</th><th></th></tr></thead><tbody>
       ${items.map(p => `<tr>
         <td><strong>${escapeHtml(p.name)}</strong><br><small style="color:var(--charcoal-soft);">${escapeHtml(p.slug)}</small></td>
         <td>${escapeHtml(p.category)}</td>
@@ -335,7 +335,7 @@ async function loadProductsList() {
         <td>${p.image ? `<img src="${escapeHtml(p.image)}" style="width:46px;height:46px;object-fit:cover;border-radius:8px;">` : '—'}</td>
         <td style="white-space:nowrap;"><button class="btn btn-outline" style="padding:4px 10px;" data-edit="product" data-id="${p.id}">Edit</button> <button class="btn btn-outline" style="padding:4px 10px; background:#f6dede; color:#8a1f1f; border-color:#f6dede;" data-del="product" data-id="${p.id}">Delete</button></td>
       </tr>`).join('')}
-    </tbody></table>`;
+    </tbody></table></div>`;
     el.querySelectorAll('[data-edit="product"]').forEach(b => b.addEventListener('click', () => showItemForm('products', b.dataset.id)));
     el.querySelectorAll('[data-del="product"]').forEach(b => b.addEventListener('click', () => deleteItem('products', b.dataset.id)));
   } catch (e) { el.innerHTML = '<p>Could not load products.</p>'; }
@@ -348,7 +348,7 @@ async function loadComponentsList() {
     const res = await fetch(window.API_BASE_URL + '/api/admin/hamper-components', { credentials: 'include' });
     const items = await res.json();
     if (!items.length) { el.innerHTML = '<p>No components yet.</p>'; return; }
-    el.innerHTML = `<table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Description</th><th></th></tr></thead><tbody>
+    el.innerHTML = `<div class="table-scroll"><table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Description</th><th></th></tr></thead><tbody>
       ${items.map(c => `<tr>
         <td><strong>${escapeHtml(c.name)}</strong></td>
         <td>${escapeHtml(c.category)}</td>
@@ -356,7 +356,7 @@ async function loadComponentsList() {
         <td>${escapeHtml(c.description || '')}</td>
         <td style="white-space:nowrap;"><button class="btn btn-outline" style="padding:4px 10px;" data-edit="comp" data-id="${c.id}">Edit</button> <button class="btn btn-outline" style="padding:4px 10px; background:#f6dede; color:#8a1f1f; border-color:#f6dede;" data-del="comp" data-id="${c.id}">Delete</button></td>
       </tr>`).join('')}
-    </tbody></table>`;
+    </tbody></table></div>`;
     el.querySelectorAll('[data-edit="comp"]').forEach(b => b.addEventListener('click', () => showItemForm('components', b.dataset.id)));
     el.querySelectorAll('[data-del="comp"]').forEach(b => b.addEventListener('click', () => deleteItem('components', b.dataset.id)));
   } catch (e) { el.innerHTML = '<p>Could not load components.</p>'; }
