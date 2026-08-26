@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadMessages();
   });
 
+  document.getElementById('productsNav').addEventListener('click', (e) => {
+    e.preventDefault();
+    openProductsView();
+  });
+
   loadStats();
   loadOrders();
   loadMessageBadge();
@@ -254,12 +259,7 @@ async function showDetail(orderId) {
       document.getElementById('detailView').style.display = 'none';
       document.getElementById('listView').style.display = 'block';
       loadOrders();
-  document.getElementById('productsNav').addEventListener('click', (e) => {
-    e.preventDefault();
-    openProductsView();
-  });
-
-  loadStats();
+      loadStats();
     } else {
       showToast('Could not delete order');
     }
