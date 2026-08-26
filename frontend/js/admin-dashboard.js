@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setActiveNav('dashboardNav');
     document.getElementById('messagesView').style.display = 'none';
     document.getElementById('detailView').style.display = 'none';
+    document.getElementById('productsView').style.display = 'none';
     document.getElementById('listView').style.display = 'block';
     loadOrders();
     loadStats();
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setActiveNav('messagesNav');
     document.getElementById('listView').style.display = 'none';
     document.getElementById('detailView').style.display = 'none';
+    document.getElementById('productsView').style.display = 'none';
     document.getElementById('messagesView').style.display = 'block';
     loadMessages();
   });
