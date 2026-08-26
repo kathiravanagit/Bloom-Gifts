@@ -121,6 +121,102 @@ const products = [
       { group_name: 'Add-ons', group_type: 'multi', items: [['Add a Personalized Card', 3, 0], ['Sparkling Juice', 14, 0]] },
     ],
   },
+
+  // ---- Extra bouquets (ha1, ha2) ----
+  {
+    category: 'bouquets', name: 'Garden Rose Bouquet', slug: 'garden-rose-bouquet',
+    tagline: 'Lush mixed roses, hand-tied',
+    description: 'A lush gather of mixed roses and seasonal blooms, hand-tied and ribboned for a timeless gift.',
+    base_price: 39.90, image: 'assets/images/ha1.jpeg', badge: 'New',
+    options: [
+      { group_name: 'Size', group_type: 'single', items: [['Small', 0, 1], ['Medium', 8, 0], ['Large', 16, 0]] },
+      { group_name: 'Add-ons', group_type: 'multi', items: [['Add a Vase', 10, 0], ['Add a Personalized Card', 3, 0]] },
+    ],
+  },
+  {
+    category: 'bouquets', name: 'Wildflower Bouquet', slug: 'wildflower-bouquet',
+    tagline: 'A loose, just-picked mix',
+    description: 'A loose, just-picked mix of wildflowers in soft pastels — bright and effortless.',
+    base_price: 36.90, image: 'assets/images/ha2.jpeg', badge: null,
+    options: [
+      { group_name: 'Size', group_type: 'single', items: [['Small', 0, 1], ['Medium', 7, 0], ['Large', 15, 0]] },
+      { group_name: 'Add-ons', group_type: 'multi', items: [['Add a Personalized Card', 3, 0]] },
+    ],
+  },
+
+  // ---- Extra gift hampers (ha3, ha4) ----
+  {
+    category: 'hampers', name: 'Sweet Treat Hamper', slug: 'sweet-treat-hamper',
+    tagline: 'A basket full of goodies',
+    description: 'A generous basket filled with sweet treats and goodies, ready to gift as-is or build out.',
+    base_price: 64.90, image: 'assets/images/ha3.jpeg', badge: 'New',
+    options: [
+      { group_name: 'Size', group_type: 'single', items: [['Small', 0, 1], ['Medium', 15, 0], ['Large', 30, 0]] },
+      { group_name: 'Add-ons', group_type: 'multi', items: [['Wine Bottle', 18, 0], ['Teddy Bear', 15, 0], ['Extra Chocolates', 10, 0]] },
+    ],
+  },
+  {
+    category: 'hampers', name: 'Tea Time Hamper', slug: 'tea-time-hamper',
+    tagline: 'Cosy treats for tea lovers',
+    description: 'A cosy hamper of tea, cookies, and soft touches for a slow, comforting afternoon.',
+    base_price: 54.90, image: 'assets/images/ha4.jpeg', badge: null,
+    options: [
+      { group_name: 'Size', group_type: 'single', items: [['Small', 0, 1], ['Medium', 12, 0], ['Large', 25, 0]] },
+      { group_name: 'Add-ons', group_type: 'multi', items: [['Tea Selection', 9, 0], ['Cookies', 7, 0], ['Scented Candle', 8, 0]] },
+    ],
+  },
+
+  // ---- Extra chocolate hampers (ha5, ha6) ----
+  {
+    category: 'chocolate', name: 'Chocolate Indulgence Box', slug: 'chocolate-indulgence-box',
+    tagline: 'A rich assortment of chocolates',
+    description: 'A rich assortment of fine chocolates in a satin-lined box — a classic treat.',
+    base_price: 32.90, image: 'assets/images/ha5.jpeg', badge: 'Bestseller',
+    options: [
+      { group_name: 'Box Size', group_type: 'single', items: [['12 pieces', 0, 1], ['24 pieces', 14, 0], ['36 pieces', 26, 0]] },
+      { group_name: 'Assortment', group_type: 'single', items: [['Dark Chocolate', 0, 1], ['Milk Chocolate', 0, 0], ['Mixed Selection', 0, 0]] },
+      { group_name: 'Add-ons', group_type: 'multi', items: [['Add a Personalized Card', 3, 0]] },
+    ],
+  },
+  {
+    category: 'chocolate', name: 'Chocolate Celebration Hamper', slug: 'chocolate-celebration-hamper',
+    tagline: 'For sweet milestones',
+    description: 'A celebration-worthy chocolate hamper paired with sparkling juice for sweet milestones.',
+    base_price: 45.90, image: 'assets/images/ha6.jpeg', badge: null,
+    options: [
+      { group_name: 'Box Size', group_type: 'single', items: [['16 pieces', 0, 1], ['28 pieces', 16, 0]] },
+      { group_name: 'Assortment', group_type: 'single', items: [['Dark Chocolate', 0, 1], ['Mixed Selection', 0, 0]] },
+      { group_name: 'Add-ons', group_type: 'multi', items: [['Sparkling Juice', 14, 0]] },
+    ],
+  },
+
+  // ---- Albums (ha7, ha8) — TEMPORARY listings, real products coming later ----
+  {
+    category: 'albums', name: 'Photo Memory Album', slug: 'photo-memory-album',
+    tagline: 'Temporary listing — real product coming soon.',
+    description: 'Placeholder album listing. The real product will be added soon.',
+    base_price: 24.90, image: 'assets/images/ha7.jpeg', badge: 'Coming Soon', options: [],
+  },
+  {
+    category: 'albums', name: 'Keepsake Scrapbook', slug: 'keepsake-scrapbook',
+    tagline: 'Temporary listing — real product coming soon.',
+    description: 'Placeholder album listing. The real product will be added soon.',
+    base_price: 29.90, image: 'assets/images/ha8.jpeg', badge: 'Coming Soon', options: [],
+  },
+
+  // ---- Greeting Cards (ha9, ha10) — TEMPORARY listings, real products coming later ----
+  {
+    category: 'cards', name: 'Floral Greeting Card', slug: 'floral-greeting-card',
+    tagline: 'Temporary listing — real product coming soon.',
+    description: 'Placeholder greeting card listing. The real product will be added soon.',
+    base_price: 5.90, image: 'assets/images/ha9.jpeg', badge: 'Coming Soon', options: [],
+  },
+  {
+    category: 'cards', name: 'Script Greeting Card', slug: 'script-greeting-card',
+    tagline: 'Temporary listing — real product coming soon.',
+    description: 'Placeholder greeting card listing. The real product will be added soon.',
+    base_price: 5.90, image: 'assets/images/ha10.jpeg', badge: 'Coming Soon', options: [],
+  },
 ];
 
 const hamperComponents = [
