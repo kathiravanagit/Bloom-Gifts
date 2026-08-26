@@ -254,7 +254,12 @@ async function showDetail(orderId) {
       document.getElementById('detailView').style.display = 'none';
       document.getElementById('listView').style.display = 'block';
       loadOrders();
-      loadStats();
+  document.getElementById('productsNav').addEventListener('click', (e) => {
+    e.preventDefault();
+    openProductsView();
+  });
+
+  loadStats();
     } else {
       showToast('Could not delete order');
     }
