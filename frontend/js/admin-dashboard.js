@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadMessages();
   });
 
+  document.getElementById('productsNav').addEventListener('click', (e) => {
+    e.preventDefault();
+    openProductsView();
+  });
+
   loadStats();
   loadOrders();
   loadMessageBadge();
@@ -272,4 +277,218 @@ function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str == null ? '' : String(str);
   return div.innerHTML;
+}
+
+// ---------- Edit Products (CRUD) ----------
+let currentProdTab = 'products';
+
+function openProductsView() {
+  setActiveNav('productsNav');
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('detailView').style.display = 'none';
+  document.getElementById('messagesView').style.display = 'none';
+  const view = document.getElementById('productsView');
+  view.style.display = 'block';
+  view.innerHTML = `
+    <h2 style="margin-bottom:6px;">Edit Products</h2>
+    <p style="margin-bottom:18px;">Manage shop products and Build-a-Hamper components — create, edit, or delete any item.</p>
+    <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+      <button class="btn btn-outline" id="tabProducts">Shop Products</button>
+      <button class="btn btn-outline" id="tabComponents">Hamper Components</button>
+      <button class="btn btn-primary" id="addItemBtn" style="margin-left:auto;">+ Add</button>
+    </div>
+    <div id="prodList"></div>
+    <div id="compList" style="display:none;"></div>
+    <div id="itemForm" style="display:none; margin-top:20px;"></div>
+  `;
+  document.getElementById('tabProducts').addEventListener('click', () => switchProdTab('products'));
+  document.getElementById('tabComponents').addEventListener('click', () => switchProdTab('components'));
+  document.getElementById('addItemBtn').addEventListener('click', () => showItemForm(currentProdTab, null));
+  switchProdTab('products');
+}
+
+function switchProdTab(tab) {
+  currentProdTab = tab;
+  document.getElementById('prodList').style.display = tab === 'products' ? 'block' : 'none';
+  document.getElementById('compList').style.display = tab === 'components' ? 'block' : 'none';
+  document.getElementById('itemForm').style.display = 'none';
+  const tp = document.getElementById('tabProducts'), tc = document.getElementById('tabComponents');
+  tp.style.borderColor = tab === 'products' ? 'var(--plum-deep)' : '#ccc';
+  tp.style.color = tab === 'products' ? 'var(--plum-deep)' : 'inherit';
+  tc.style.borderColor = tab === 'components' ? 'var(--plum-deep)' : '#ccc';
+  tc.style.color = tab === 'components' ? 'var(--plum-deep)' : 'inherit';
+  if (tab === 'products') loadProductsList(); else loadComponentsList();
+}
+
+async function loadProductsList() {
+  const el = document.getElementById('prodList');
+  el.innerHTML = '<p>Loading…</p>';
+  try {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/products', { credentials: 'include' });
+    const items = await res.json();
+    if (!items.length) { el.innerHTML = '<p>No products yet.</p>'; return; }
+    el.innerHTML = `<table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Image</th><th></th></tr></thead><tbody>
+      ${items.map(p => `<tr>
+        <td><strong>${escapeHtml(p.name)}</strong><br><small style="color:var(--charcoal-soft);">${escapeHtml(p.slug)}</small></td>
+        <td>${escapeHtml(p.category)}</td>
+        <td>₹${Number(p.base_price).toFixed(2)}</td>
+        <td>${p.image ? `<img src="${escapeHtml(p.image)}" style="width:46px;height:46px;object-fit:cover;border-radius:8px;">` : '—'}</td>
+        <td style="white-space:nowrap;"><button class="btn btn-outline" style="padding:4px 10px;" data-edit="product" data-id="${p.id}">Edit</button> <button class="btn btn-outline" style="padding:4px 10px; background:#f6dede; color:#8a1f1f; border-color:#f6dede;" data-del="product" data-id="${p.id}">Delete</button></td>
+      </tr>`).join('')}
+    </tbody></table>`;
+    el.querySelectorAll('[data-edit="product"]').forEach(b => b.addEventListener('click', () => showItemForm('products', b.dataset.id)));
+    el.querySelectorAll('[data-del="product"]').forEach(b => b.addEventListener('click', () => deleteItem('products', b.dataset.id)));
+  } catch (e) { el.innerHTML = '<p>Could not load products.</p>'; }
+}
+
+async function loadComponentsList() {
+  const el = document.getElementById('compList');
+  el.innerHTML = '<p>Loading…</p>';
+  try {
+    const res = await fetch(window.API_BASE_URL + '/api/admin/hamper-components', { credentials: 'include' });
+    const items = await res.json();
+    if (!items.length) { el.innerHTML = '<p>No components yet.</p>'; return; }
+    el.innerHTML = `<table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Description</th><th></th></tr></thead><tbody>
+      ${items.map(c => `<tr>
+        <td><strong>${escapeHtml(c.name)}</strong></td>
+        <td>${escapeHtml(c.category)}</td>
+        <td>₹${Number(c.price).toFixed(2)}</td>
+        <td>${escapeHtml(c.description || '')}</td>
+        <td style="white-space:nowrap;"><button class="btn btn-outline" style="padding:4px 10px;" data-edit="comp" data-id="${c.id}">Edit</button> <button class="btn btn-outline" style="padding:4px 10px; background:#f6dede; color:#8a1f1f; border-color:#f6dede;" data-del="comp" data-id="${c.id}">Delete</button></td>
+      </tr>`).join('')}
+    </tbody></table>`;
+    el.querySelectorAll('[data-edit="comp"]').forEach(b => b.addEventListener('click', () => showItemForm('components', b.dataset.id)));
+    el.querySelectorAll('[data-del="comp"]').forEach(b => b.addEventListener('click', () => deleteItem('components', b.dataset.id)));
+  } catch (e) { el.innerHTML = '<p>Could not load components.</p>'; }
+}
+
+async function showItemForm(kind, id) {
+  const wrap = document.getElementById('itemForm');
+  let data = null;
+  if (id) {
+    const res = await fetch(window.API_BASE_URL + (kind === 'products' ? '/api/admin/products' : '/api/admin/hamper-components'), { credentials: 'include' });
+    const list = await res.json();
+    data = list.find(x => x.id === id);
+  }
+  if (kind === 'products') renderProductForm(data); else renderComponentForm(data);
+  wrap.style.display = 'block';
+  wrap.scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderProductForm(d) {
+  d = d || {};
+  const cats = ['bouquets', 'hampers', 'chocolate', 'albums', 'cards'];
+  const wrap = document.getElementById('itemForm');
+  wrap.innerHTML = `
+    <div class="admin-table-card" style="padding:24px;">
+      <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin-bottom:14px;">${d.id ? 'Edit' : 'Add'} Product</h4>
+      <div class="form-field"><label>Name</label><input id="f_name" value="${escapeHtml(d.name || '')}"></div>
+      <div class="form-field"><label>Category</label><select id="f_category">${cats.map(c => `<option ${c === d.category ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+      <div class="form-field"><label>Slug</label><input id="f_slug" value="${escapeHtml(d.slug || '')}" placeholder="e.g. rose-romance-bouquet"></div>
+      <div class="form-field"><label>Tagline</label><input id="f_tagline" value="${escapeHtml(d.tagline || '')}"></div>
+      <div class="form-field"><label>Description</label><textarea id="f_description" rows="3">${escapeHtml(d.description || '')}</textarea></div>
+      <div class="form-field"><label>Base Price (₹)</label><input id="f_base_price" type="number" step="0.01" value="${d.base_price != null ? d.base_price : ''}"></div>
+      <div class="form-field"><label>Image path</label><input id="f_image" value="${escapeHtml(d.image || '')}" placeholder="assets/images/pr1.jpeg"></div>
+      <div class="form-field"><label>Badge</label><input id="f_badge" value="${escapeHtml(d.badge || '')}" placeholder="Bestseller / Signature / Popular / (blank)"></div>
+      <div class="form-field"><label>Options (JSON)</label><textarea id="f_options" rows="4" placeholder='[{"group_name":"Size","group_type":"single","items":[["Small",0,1]]}]'>${escapeHtml(JSON.stringify(d.options || [], null, 0))}</textarea></div>
+      <div style="display:flex; gap:10px; margin-top:12px;">
+        <button class="btn btn-primary" id="f_save">Save</button>
+        <button class="btn btn-outline" id="f_cancel">Cancel</button>
+      </div>
+    </div>`;
+  document.getElementById('f_cancel').addEventListener('click', () => { wrap.style.display = 'none'; });
+  document.getElementById('f_save').addEventListener('click', () => saveProduct(d.id));
+}
+
+async function saveProduct(id) {
+  const payload = {
+    name: document.getElementById('f_name').value.trim(),
+    category: document.getElementById('f_category').value,
+    slug: document.getElementById('f_slug').value.trim(),
+    tagline: document.getElementById('f_tagline').value.trim(),
+    description: document.getElementById('f_description').value.trim(),
+    base_price: Number(document.getElementById('f_base_price').value),
+    image: document.getElementById('f_image').value.trim(),
+    badge: document.getElementById('f_badge').value.trim() || null,
+  };
+  let options = [];
+  const optRaw = document.getElementById('f_options').value.trim();
+  if (optRaw) {
+    try { options = JSON.parse(optRaw); }
+    catch (e) { showToast('Options field is not valid JSON'); return; }
+  }
+  payload.options = options;
+  if (!payload.name || !payload.slug || isNaN(payload.base_price)) { showToast('Name, slug and a valid price are required'); return; }
+  try {
+    const url = id ? `/api/admin/products/${id}` : '/api/admin/products';
+    const res = await fetch(window.API_BASE_URL + url, {
+      method: id ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) { const er = await res.json().catch(() => ({})); showToast(er.error || 'Save failed'); return; }
+    showToast('Product saved');
+    document.getElementById('itemForm').style.display = 'none';
+    loadProductsList();
+  } catch (e) { showToast('Save failed'); }
+}
+
+function renderComponentForm(d) {
+  d = d || {};
+  const cats = ['base', 'flowers', 'sweets', 'drinks', 'extras', 'cards'];
+  const wrap = document.getElementById('itemForm');
+  wrap.innerHTML = `
+    <div class="admin-table-card" style="padding:24px;">
+      <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin-bottom:14px;">${d.id ? 'Edit' : 'Add'} Hamper Component</h4>
+      <div class="form-field"><label>Name</label><input id="f_name" value="${escapeHtml(d.name || '')}"></div>
+      <div class="form-field"><label>Category</label><select id="f_category">${cats.map(c => `<option ${c === d.category ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+      <div class="form-field"><label>Price (₹)</label><input id="f_price" type="number" step="0.01" value="${d.price != null ? d.price : ''}"></div>
+      <div class="form-field"><label>Description</label><input id="f_description" value="${escapeHtml(d.description || '')}"></div>
+      <div class="form-field"><label>Sort order</label><input id="f_sort" type="number" value="${d.sort_order != null ? d.sort_order : 0}"></div>
+      <div style="display:flex; gap:10px; margin-top:12px;">
+        <button class="btn btn-primary" id="f_save">Save</button>
+        <button class="btn btn-outline" id="f_cancel">Cancel</button>
+      </div>
+    </div>`;
+  document.getElementById('f_cancel').addEventListener('click', () => { wrap.style.display = 'none'; });
+  document.getElementById('f_save').addEventListener('click', () => saveComponent(d.id));
+}
+
+async function saveComponent(id) {
+  const payload = {
+    name: document.getElementById('f_name').value.trim(),
+    category: document.getElementById('f_category').value,
+    price: Number(document.getElementById('f_price').value),
+    description: document.getElementById('f_description').value.trim(),
+    sort_order: Number(document.getElementById('f_sort').value || 0),
+  };
+  if (!payload.name || isNaN(payload.price)) { showToast('Name and a valid price are required'); return; }
+  try {
+    const url = id ? `/api/admin/hamper-components/${id}` : '/api/admin/hamper-components';
+    const res = await fetch(window.API_BASE_URL + url, {
+      method: id ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) { const er = await res.json().catch(() => ({})); showToast(er.error || 'Save failed'); return; }
+    showToast('Component saved');
+    document.getElementById('itemForm').style.display = 'none';
+    loadComponentsList();
+  } catch (e) { showToast('Save failed'); }
+}
+
+async function deleteItem(kind, id) {
+  if (!window.confirm('Delete this item permanently?')) return;
+  const url = kind === 'products' ? `/api/admin/products/${id}` : `/api/admin/hamper-components/${id}`;
+  try {
+    const res = await fetch(window.API_BASE_URL + url, { method: 'DELETE', credentials: 'include' });
+    if (res.ok) {
+      showToast('Deleted');
+      kind === 'products' ? loadProductsList() : loadComponentsList();
+    } else {
+      showToast('Delete failed');
+    }
+  } catch (e) { showToast('Delete failed'); }
 }
