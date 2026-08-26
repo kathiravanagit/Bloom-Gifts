@@ -32,31 +32,45 @@ router.post('/', async (req, res) => {
     const rawTotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
     const computedTotal = Math.round(rawTotal * 100) / 100;
 
-    // Generate order_number
-    const count = await Order.countDocuments();
-    const orderNumber = `BG${1000 + count + 1}`;
+    // Generate a unique, collision-free order number (safe even after deletions)
+    let savedOrder = null;
+    for (let attempt = 0; attempt < 5 && !savedOrder; attempt++) {
+      const lastOrder = await Order.findOne().sort({ order_number: -1 }).lean();
+      let nextNum = 1001;
+      if (lastOrder && lastOrder.order_number) {
+        const m = parseInt(String(lastOrder.order_number).replace(/\D/g, ''), 10);
+        if (!isNaN(m)) nextNum = m + 1;
+      }
+      const orderNumber = `BG${nextNum}`;
 
-    const newOrder = new Order({
-      order_number: orderNumber,
-      guest_name: guest_name.trim(),
-      email: email.trim(),
-      mobile: mobile.trim(),
-      gift_note: (gift_note || '').trim(),
-      payment_method: payment_method || 'Cash on Delivery',
-      total_amount: computedTotal,
-      items: items.map(item => ({
-        product_id: item.product_id || null,
-        product_name: item.product_name,
-        quantity: item.quantity,
-        unit_price: item.unit_price,
-        customizations: item.customizations || {},
-        subtotal: item.subtotal
-      }))
-    });
+      const newOrder = new Order({
+        order_number: orderNumber,
+        guest_name: guest_name.trim(),
+        email: email.trim(),
+        mobile: mobile.trim(),
+        gift_note: (gift_note || '').trim(),
+        payment_method: payment_method || 'Cash on Delivery',
+        total_amount: computedTotal,
+        items: items.map(item => ({
+          product_id: item.product_id || null,
+          product_name: item.product_name,
+          quantity: item.quantity,
+          unit_price: item.unit_price,
+          customizations: item.customizations || {},
+          subtotal: item.subtotal
+        }))
+      });
 
-    await newOrder.save();
-    
-    const orderObj = newOrder.toObject();
+      try {
+        await newOrder.save();
+        savedOrder = newOrder;
+      } catch (saveErr) {
+        if (saveErr.code !== 11000) throw saveErr; // duplicate order_number -> retry with next number
+      }
+    }
+    if (!savedOrder) return res.status(500).json({ error: 'Could not generate a unique order number. Please try again.' });
+
+    const orderObj = savedOrder.toObject();
     orderObj.id = orderObj._id.toString();
     if (orderObj.items) {
       orderObj.items = orderObj.items.map(i => {
