@@ -363,11 +363,10 @@ async function loadProductsList() {
     const res = await fetch(window.API_BASE_URL + '/api/admin/products', { credentials: 'include' });
     const items = await res.json();
     if (!items.length) { el.innerHTML = '<p>No products yet.</p>'; return; }
-    el.innerHTML = `<div class="table-scroll"><table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Image</th><th></th></tr></thead><tbody>
+    el.innerHTML = `<div class="table-scroll"><table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Image</th><th></th></tr></thead><tbody>
       ${items.map(p => `<tr>
         <td><strong>${escapeHtml(p.name)}</strong><br><small style="color:var(--charcoal-soft);">${escapeHtml(p.slug)}</small></td>
         <td>${escapeHtml(p.category)}</td>
-        <td>₹${Number(p.base_price).toFixed(2)}</td>
         <td>${p.image ? `<img src="${escapeHtml(p.image)}" style="width:46px;height:46px;object-fit:cover;border-radius:8px;">` : '—'}</td>
         <td style="white-space:nowrap;"><button class="btn btn-outline" style="padding:4px 10px;" data-edit="product" data-id="${p.id}">Edit</button> <button class="btn btn-outline" style="padding:4px 10px; background:#f6dede; color:#8a1f1f; border-color:#f6dede;" data-del="product" data-id="${p.id}">Delete</button></td>
       </tr>`).join('')}
@@ -423,7 +422,6 @@ function renderProductForm(d) {
       <div class="form-field"><label>Slug</label><input id="f_slug" value="${escapeHtml(d.slug || '')}" placeholder="e.g. rose-romance-bouquet"></div>
       <div class="form-field"><label>Tagline</label><input id="f_tagline" value="${escapeHtml(d.tagline || '')}"></div>
       <div class="form-field"><label>Description</label><textarea id="f_description" rows="3">${escapeHtml(d.description || '')}</textarea></div>
-      <div class="form-field"><label>Base Price (₹)</label><input id="f_base_price" type="number" step="0.01" value="${d.base_price != null ? d.base_price : ''}"></div>
       <div class="form-field"><label>Image path</label><input id="f_image" value="${escapeHtml(d.image || '')}" placeholder="assets/images/pr1.jpeg"></div>
       <div class="form-field"><label>Badge</label><input id="f_badge" value="${escapeHtml(d.badge || '')}" placeholder="Bestseller / Signature / Popular / (blank)"></div>
       <div class="form-field"><label>Options (JSON)</label><textarea id="f_options" rows="4" placeholder='[{"group_name":"Size","group_type":"single","items":[["Small",0,1]]}]'>${escapeHtml(JSON.stringify(d.options || [], null, 0))}</textarea></div>
@@ -443,7 +441,6 @@ async function saveProduct(id) {
     slug: document.getElementById('f_slug').value.trim(),
     tagline: document.getElementById('f_tagline').value.trim(),
     description: document.getElementById('f_description').value.trim(),
-    base_price: Number(document.getElementById('f_base_price').value),
     image: document.getElementById('f_image').value.trim(),
     badge: document.getElementById('f_badge').value.trim() || null,
   };
