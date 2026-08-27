@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderSummary(cart) {
   const itemsWrap = document.getElementById('checkoutItems');
   itemsWrap.innerHTML = cart.map((item) => `
-    <div class="summary-row"><span>${item.quantity} &times; ${item.product_name}</span><span>${formatMoney(item.subtotal)}</span></div>
+    <div class="summary-row"><span>${item.quantity} &times; ${item.product_name}</span><span>Custom</span></div>
   `).join('');
 
   document.getElementById('sumSubtotal').textContent = 'Custom';
