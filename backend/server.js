@@ -15,6 +15,7 @@ const adminRoutes = require('./routes/admin');
 const adminProductsRouter = require('./routes/adminProducts');
 const hamperComponentsRouter = require('./routes/hamperComponents');
 const contactRoutes = require('./routes/contact');
+const uploadRoutes = require('./routes/upload');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -83,6 +84,8 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/products', adminProductsRouter);
 app.use('/api/admin/hamper-components', hamperComponentsRouter);
+app.use('/api/admin/upload', uploadRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(PORT, () => {
   console.log(`G_giftrees server running at http://localhost:${PORT}`);

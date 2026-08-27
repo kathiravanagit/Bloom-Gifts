@@ -24,6 +24,7 @@
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "mongoose": "^9.9.3",
+    "multer": "^2.2.0",
     "serve": "^14.2.6"
   }
 }

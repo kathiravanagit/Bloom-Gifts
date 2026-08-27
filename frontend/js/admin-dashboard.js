@@ -1,4 +1,16 @@
 const STATUS_OPTIONS = ['Pending', 'Confirmed', 'Out for Delivery', 'Delivered', 'Cancelled'];
+let selectedImageFile = null;
+
+function handleImageFile(file) {
+  selectedImageFile = file;
+  const preview = document.getElementById('imagePreview');
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    preview.style.display = 'block';
+    preview.innerHTML = `<img src="${e.target.result}" style="max-width:120px; max-height:120px; border-radius:8px; object-fit:cover;">`;
+  };
+  reader.readAsDataURL(file);
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   const session = await checkSession();
@@ -422,7 +434,14 @@ function renderProductForm(d) {
       <div class="form-field"><label>Slug</label><input id="f_slug" value="${escapeHtml(d.slug || '')}" placeholder="e.g. rose-romance-bouquet"></div>
       <div class="form-field"><label>Tagline</label><input id="f_tagline" value="${escapeHtml(d.tagline || '')}"></div>
       <div class="form-field"><label>Description</label><textarea id="f_description" rows="3">${escapeHtml(d.description || '')}</textarea></div>
-      <div class="form-field"><label>Image path</label><input id="f_image" value="${escapeHtml(d.image || '')}" placeholder="assets/images/pr1.jpeg"></div>
+      <div class="form-field"><label>Image</label>
+        <div id="dropZone" style="border:2px dashed #ccc; border-radius:10px; padding:28px 16px; text-align:center; cursor:pointer; transition:all 0.2s; background:#faf7f5;">
+          <p style="margin:0; color:var(--charcoal-soft); font-size:0.9rem;">Drag &amp; drop an image here, or <strong>click to browse</strong></p>
+          <p style="margin:6px 0 0; font-size:0.75rem; color:#999;">JPG, JPEG or PNG — max 5 MB</p>
+          <input type="file" id="f_image_file" accept=".jpg,.jpeg,.png" style="display:none;">
+        </div>
+        <div id="imagePreview" style="display:none; margin-top:10px;"></div>
+      </div>
       <div class="form-field"><label>Badge</label><input id="f_badge" value="${escapeHtml(d.badge || '')}" placeholder="Bestseller / Signature / Popular / (blank)"></div>
       <div class="form-field"><label>Options (JSON)</label><textarea id="f_options" rows="4" placeholder='[{"group_name":"Size","group_type":"single","items":[["Small",0,1]]}]'>${escapeHtml(JSON.stringify(d.options || [], null, 0))}</textarea></div>
       <div style="display:flex; gap:10px; margin-top:12px;">
@@ -430,18 +449,61 @@ function renderProductForm(d) {
         <button class="btn btn-outline" id="f_cancel">Cancel</button>
       </div>
     </div>`;
-  document.getElementById('f_cancel').addEventListener('click', () => { wrap.style.display = 'none'; });
+  document.getElementById('f_cancel').addEventListener('click', () => { wrap.style.display = 'none'; selectedImageFile = null; });
   document.getElementById('f_save').addEventListener('click', () => saveProduct(d.id));
+
+  selectedImageFile = null;
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('f_image_file');
+  const preview = document.getElementById('imagePreview');
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--plum-deep)'; dropZone.style.background = '#f3eef9'; });
+  dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = '#ccc'; dropZone.style.background = '#faf7f5'; });
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#ccc';
+    dropZone.style.background = '#faf7f5';
+    const file = e.dataTransfer.files[0];
+    if (file && /\.(jpe?g|png)$/i.test(file.name)) handleImageFile(file);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleImageFile(fileInput.files[0]); });
+
+  if (d.image) {
+    preview.style.display = 'block';
+    preview.innerHTML = `<img src="${escapeHtml(d.image)}" style="max-width:120px; max-height:120px; border-radius:8px; object-fit:cover;">`;
+  }
 }
 
 async function saveProduct(id) {
+  let imageUrl = '';
+  if (id) {
+    try {
+      const existing = await fetch(window.API_BASE_URL + '/api/admin/products', { credentials: 'include' });
+      const items = await existing.json();
+      const item = items.find(x => x.id === id);
+      if (item) imageUrl = item.image || '';
+    } catch (e) { /* keep empty */ }
+  }
+  if (selectedImageFile) {
+    const fd = new FormData();
+    fd.append('image', selectedImageFile);
+    try {
+      const upRes = await fetch(window.API_BASE_URL + '/api/admin/upload', {
+        method: 'POST', credentials: 'include', body: fd,
+      });
+      if (!upRes.ok) { showToast('Image upload failed'); return; }
+      const { url } = await upRes.json();
+      imageUrl = url;
+    } catch (e) { showToast('Image upload failed'); return; }
+  }
   const payload = {
     name: document.getElementById('f_name').value.trim(),
     category: document.getElementById('f_category').value,
     slug: document.getElementById('f_slug').value.trim(),
     tagline: document.getElementById('f_tagline').value.trim(),
     description: document.getElementById('f_description').value.trim(),
-    image: document.getElementById('f_image').value.trim(),
+    image: imageUrl,
     badge: document.getElementById('f_badge').value.trim() || null,
   };
   let options = [];
@@ -451,7 +513,7 @@ async function saveProduct(id) {
     catch (e) { showToast('Options field is not valid JSON'); return; }
   }
   payload.options = options;
-  if (!payload.name || !payload.slug || isNaN(payload.base_price)) { showToast('Name, slug and a valid price are required'); return; }
+  if (!payload.name || !payload.slug) { showToast('Name and slug are required'); return; }
   try {
     const url = id ? `/api/admin/products/${id}` : '/api/admin/products';
     const res = await fetch(window.API_BASE_URL + url, {
@@ -462,6 +524,7 @@ async function saveProduct(id) {
     });
     if (!res.ok) { const er = await res.json().catch(() => ({})); showToast(er.error || 'Save failed'); return; }
     showToast('Product saved');
+    selectedImageFile = null;
     document.getElementById('itemForm').style.display = 'none';
     loadProductsList();
   } catch (e) { showToast('Save failed'); }

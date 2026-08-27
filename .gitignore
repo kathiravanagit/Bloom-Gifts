@@ -43,6 +43,9 @@ out/
 .stylelintcache
 *.tsbuildinfo
 
+# ─── Uploaded Files ─────────────────────────────────────────────────────────
+backend/uploads/
+
 # ─── OS Files ────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
