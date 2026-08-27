@@ -395,11 +395,10 @@ async function loadComponentsList() {
     const res = await fetch(window.API_BASE_URL + '/api/admin/hamper-components', { credentials: 'include' });
     const items = await res.json();
     if (!items.length) { el.innerHTML = '<p>No components yet.</p>'; return; }
-    el.innerHTML = `<div class="table-scroll"><table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Description</th><th></th></tr></thead><tbody>
+    el.innerHTML = `<div class="table-scroll"><table class="orders-table"><thead><tr><th>Name</th><th>Category</th><th>Description</th><th></th></tr></thead><tbody>
       ${items.map(c => `<tr>
         <td><strong>${escapeHtml(c.name)}</strong></td>
         <td>${escapeHtml(c.category)}</td>
-        <td>₹${Number(c.price).toFixed(2)}</td>
         <td>${escapeHtml(c.description || '')}</td>
         <td style="white-space:nowrap;"><button class="btn btn-outline" style="padding:4px 10px;" data-edit="comp" data-id="${c.id}">Edit</button> <button class="btn btn-outline" style="padding:4px 10px; background:#f6dede; color:#8a1f1f; border-color:#f6dede;" data-del="comp" data-id="${c.id}">Delete</button></td>
       </tr>`).join('')}
@@ -539,7 +538,6 @@ function renderComponentForm(d) {
       <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin-bottom:14px;">${d.id ? 'Edit' : 'Add'} Hamper Component</h4>
       <div class="form-field"><label>Name</label><input id="f_name" value="${escapeHtml(d.name || '')}"></div>
       <div class="form-field"><label>Category</label><select id="f_category">${cats.map(c => `<option ${c === d.category ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
-      <div class="form-field"><label>Price (₹)</label><input id="f_price" type="number" step="0.01" value="${d.price != null ? d.price : ''}"></div>
       <div class="form-field"><label>Description</label><input id="f_description" value="${escapeHtml(d.description || '')}"></div>
       <div class="form-field"><label>Sort order</label><input id="f_sort" type="number" value="${d.sort_order != null ? d.sort_order : 0}"></div>
       <div style="display:flex; gap:10px; margin-top:12px;">
@@ -555,11 +553,10 @@ async function saveComponent(id) {
   const payload = {
     name: document.getElementById('f_name').value.trim(),
     category: document.getElementById('f_category').value,
-    price: Number(document.getElementById('f_price').value),
     description: document.getElementById('f_description').value.trim(),
     sort_order: Number(document.getElementById('f_sort').value || 0),
   };
-  if (!payload.name || isNaN(payload.price)) { showToast('Name and a valid price are required'); return; }
+  if (!payload.name) { showToast('Name is required'); return; }
   try {
     const url = id ? `/api/admin/hamper-components/${id}` : '/api/admin/hamper-components';
     const res = await fetch(window.API_BASE_URL + url, {
