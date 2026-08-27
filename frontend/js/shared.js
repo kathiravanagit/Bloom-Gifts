@@ -141,7 +141,7 @@ function renderFooter() {
         <div>
           <h4>Visit our store</h4>
           <a href="contact.html">Pondicherry</a>
-          <a href="tel:+917845120668">+91 78451 20668</a>
+          <a href="https://wa.me/917845120668?text=Can%20you%20suggest%20some%20gifts%3F" target="_blank" rel="noopener">+91 78451 20668</a>
           <a href="mailto:ggiftrees31@gmail.com">ggiftrees31@gmail.com</a>
         </div>
       </div>
