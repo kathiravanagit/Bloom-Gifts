@@ -222,7 +222,7 @@ async function showDetail(orderId) {
         <strong>${item.quantity} &times; ${escapeHtml(item.product_name)}</strong><br>
         <span style="font-size:0.82rem; color:var(--charcoal-soft);">${customizationLine(item.customizations)}</span>
       </div>
-      <div>${formatMoney(item.subtotal)}</div>
+      <div>Custom</div>
     </div>
   `).join('');
 
