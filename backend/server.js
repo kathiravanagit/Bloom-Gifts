@@ -96,7 +96,7 @@ app.use(session({
   }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 4, // 4 hours
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'none',
   },
 }));
@@ -113,7 +113,7 @@ app.get('/health', (req, res) => {
 // Apply rate limiters
 app.use('/api/user/login', authLimiter);
 app.use('/api/user/register', authLimiter);
-app.use('/api/orders', orderLimiter);
+app.post('/api/orders', orderLimiter);
 app.use('/api/contact', contactLimiter);
 
 app.use('/api/products', productRoutes);

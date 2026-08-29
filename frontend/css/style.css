@@ -462,3 +462,63 @@ table.orders-table tbody tr:hover { background: #FBF7FE; }
   font-weight: 700; text-decoration: none;
 }
 .skip-nav:focus { left: 10px; }
+
+/* ---------- Welcome overlay ---------- */
+.welcome-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: linear-gradient(135deg, #4a2d5e 0%, #6b4f87 40%, #8b6aae 70%, #a88bc4 100%);
+  display: flex; align-items: center; justify-content: center;
+  animation: welcomeFadeIn 0.6s ease;
+}
+.welcome-overlay.fade-out {
+  animation: welcomeFadeOut 0.6s ease forwards;
+}
+@keyframes welcomeFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes welcomeFadeOut { from { opacity: 1; } to { opacity: 0; pointer-events: none; } }
+
+.welcome-content {
+  text-align: center; color: white; z-index: 2; padding: 20px;
+  animation: welcomeSlideUp 0.8s ease 0.3s both;
+}
+@keyframes welcomeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.welcome-brand { margin-bottom: 18px; }
+.welcome-brand svg { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2)); }
+.welcome-title {
+  font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700; margin: 0 0 10px; line-height: 1.15;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+}
+.welcome-title em { font-style: normal; color: var(--gold-soft); }
+.welcome-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.3rem); margin: 0 0 30px;
+  opacity: 0.9; font-weight: 300; letter-spacing: 0.02em;
+}
+.welcome-btn {
+  padding: 14px 40px; font-size: 1rem; border-radius: 999px;
+  background: white; color: var(--plum-deep); border: none; cursor: pointer;
+  font-weight: 700; transition: transform 0.2s, box-shadow 0.2s;
+}
+.welcome-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.25); }
+
+/* Falling petals */
+.welcome-petals {
+  position: absolute; inset: 0; overflow: hidden; z-index: 1; pointer-events: none;
+}
+.petal {
+  position: absolute; top: -40px;
+  width: var(--size, 18px); height: var(--size, 18px);
+  background: var(--petal-color, #d4b8e8);
+  border-radius: 50% 0 50% 0;
+  opacity: var(--opacity, 0.6);
+  animation: petalFall var(--duration, 4s) var(--delay, 0s) linear infinite;
+  transform: rotate(var(--rotate, 45deg));
+}
+@keyframes petalFall {
+  0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+  10% { opacity: var(--opacity, 0.6); }
+  90% { opacity: var(--opacity, 0.6); }
+  100% { transform: translateY(110vh) rotate(720deg) translateX(var(--drift, 40px)); opacity: 0; }
+}

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let order = null;
   try {
-    const cached = JSON.parse(sessionStorage.getItem('bloomgifts_last_order') || 'null');
+    const cached = JSON.parse(localStorage.getItem('bloomgifts_last_order') || 'null');
     if (cached && cached.order_number === orderNumber) {
       order = cached;
     } else {
@@ -86,7 +86,7 @@ function render(order) {
 function customizationLine(c) {
   return Object.entries(c || {})
     .filter(([, v]) => v && (!Array.isArray(v) || v.length))
-    .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`)
+    .map(([k, v]) => `${escapeHtml(k)}: ${Array.isArray(v) ? v.map(escapeHtml).join(', ') : escapeHtml(v)}`)
     .join(' &middot; ');
 }
 

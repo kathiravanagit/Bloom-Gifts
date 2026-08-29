@@ -542,6 +542,7 @@ function renderComponentForm(d) {
       <div class="form-field"><label>Name</label><input id="f_name" value="${escapeHtml(d.name || '')}"></div>
       <div class="form-field"><label>Category</label><select id="f_category">${cats.map(c => `<option ${c === d.category ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
       <div class="form-field"><label>Description</label><input id="f_description" value="${escapeHtml(d.description || '')}"></div>
+      <div class="form-field"><label>Price (₹)</label><input id="f_price" type="number" min="0" step="0.01" value="${d.price != null ? d.price : ''}" placeholder="e.g. 250"></div>
       <div class="form-field"><label>Sort order</label><input id="f_sort" type="number" value="${d.sort_order != null ? d.sort_order : 0}"></div>
       <div style="display:flex; gap:10px; margin-top:12px;">
         <button class="btn btn-primary" id="f_save">Save</button>
@@ -557,6 +558,7 @@ async function saveComponent(id) {
     name: document.getElementById('f_name').value.trim(),
     category: document.getElementById('f_category').value,
     description: document.getElementById('f_description').value.trim(),
+    price: document.getElementById('f_price').value ? Number(document.getElementById('f_price').value) : 0,
     sort_order: Number(document.getElementById('f_sort').value || 0),
   };
   if (!payload.name) { showToast('Name is required'); return; }

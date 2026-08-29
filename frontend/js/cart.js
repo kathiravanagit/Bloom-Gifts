@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', renderCart);
 function customizationSummary(c) {
   return Object.entries(c || {})
     .filter(([, v]) => v && (!Array.isArray(v) || v.length))
-    .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`)
+    .map(([k, v]) => `${escapeHtml(k)}: ${Array.isArray(v) ? v.map(escapeHtml).join(', ') : escapeHtml(v)}`)
     .join(' &middot; ');
 }
 

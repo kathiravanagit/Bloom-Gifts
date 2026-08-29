@@ -208,7 +208,7 @@ async function submitOrder(payload, btn) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Could not place order');
-    sessionStorage.setItem('bloomgifts_last_order', JSON.stringify(data));
+    localStorage.setItem('bloomgifts_last_order', JSON.stringify(data));
     clearCart();
     window.location.href = `confirmation.html?order=${encodeURIComponent(data.order_number)}`;
   } catch (err) {
