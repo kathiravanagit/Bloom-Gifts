@@ -198,7 +198,24 @@ async function checkUserSession() {
   } catch (e) { /* ignore */ }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  const page = document.body.dataset.page || '';
+  const publicPages = ['home', 'user-login', 'register', 'admin-login', 'admin-dashboard'];
+
+  if (!publicPages.includes(page)) {
+    try {
+      const res = await fetch(window.API_BASE_URL + '/api/user/session', { credentials: 'include' });
+      const session = await res.json();
+      if (!session.loggedIn) {
+        window.location.href = 'user-login.html';
+        return;
+      }
+    } catch (e) {
+      window.location.href = 'user-login.html';
+      return;
+    }
+  }
+
   renderHeader();
   renderFooter();
 });

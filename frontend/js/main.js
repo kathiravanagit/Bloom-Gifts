@@ -1,18 +1,34 @@
-document.addEventListener('DOMContentLoaded', () => {
-  showWelcomeOverlay();
-  initHeroSlideshow();
-  loadBestsellers();
-  showWelcomeBanner();
+let mainSession = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await fetch(window.API_BASE_URL + '/api/user/session', { credentials: 'include' });
+    mainSession = await res.json();
+  } catch (e) {
+    mainSession = { loggedIn: false };
+  }
+
+  if (!mainSession.loggedIn) {
+    showWelcomeOverlay();
+  } else {
+    initHeroSlideshow();
+    loadBestsellers();
+  }
 });
 
 function showWelcomeOverlay() {
-  if (localStorage.getItem('bloomgifts_welcomed')) return;
+  if (localStorage.getItem('bloomgifts_welcomed')) {
+    window.location.href = 'user-login.html';
+    return;
+  }
   const overlay = document.getElementById('welcomeOverlay');
-  if (!overlay) return;
+  if (!overlay) {
+    window.location.href = 'user-login.html';
+    return;
+  }
 
   overlay.style.display = 'flex';
 
-  // 1. Bokeh orbs — large soft glowing circles
   const bokehWrap = document.getElementById('welcomeBokeh');
   const orbColors = [
     'rgba(168,139,196,0.35)', 'rgba(212,168,67,0.2)', 'rgba(180,140,200,0.3)',
@@ -36,7 +52,6 @@ function showWelcomeOverlay() {
     bokehWrap.appendChild(orb);
   }
 
-  // 2. Falling petals
   const petalsWrap = document.getElementById('welcomePetals');
   const petalColors = ['#d4b8e8', '#e0c4f0', '#c9a2d4', '#f0e0f8', '#b89cc9', '#dfc8ee', '#e8d0f5'];
   for (let i = 0; i < 40; i++) {
@@ -53,7 +68,6 @@ function showWelcomeOverlay() {
     petalsWrap.appendChild(petal);
   }
 
-  // 3. Sparkle particles
   const sparkWrap = document.getElementById('welcomeSparkles');
   for (let i = 0; i < 30; i++) {
     const sp = document.createElement('div');
@@ -66,66 +80,13 @@ function showWelcomeOverlay() {
     sparkWrap.appendChild(sp);
   }
 
-  function dismissOverlay() {
+  function goToLogin() {
     localStorage.setItem('bloomgifts_welcomed', '1');
     overlay.classList.add('fade-out');
-    setTimeout(() => { overlay.style.display = 'none'; }, 800);
+    setTimeout(() => { window.location.href = 'user-login.html'; }, 800);
   }
 
-  document.getElementById('welcomeEnter').addEventListener('click', dismissOverlay);
+  document.getElementById('welcomeEnter').addEventListener('click', goToLogin);
 
-  // Auto-dismiss after 6 seconds
-  setTimeout(dismissOverlay, 6000);
-}
-
-async function showWelcomeBanner() {
-  try {
-    const res = await fetch(window.API_BASE_URL + '/api/user/session', { credentials: 'include' });
-    const session = await res.json();
-    if (!session.loggedIn) {
-      document.getElementById('welcomeBanner').style.display = 'block';
-    }
-  } catch (e) { /* show banner on error too */ document.getElementById('welcomeBanner').style.display = 'block'; }
-}
-
-function initHeroSlideshow() {
-  const slides = Array.from(document.querySelectorAll('.hero-media'));
-  const dotsWrap = document.getElementById('heroDots');
-  if (!slides.length || !dotsWrap) return;
-
-  let current = 0;
-  slides.forEach((s, i) => {
-    const dot = document.createElement('button');
-    if (i === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => goTo(i));
-    dotsWrap.appendChild(dot);
-  });
-
-  function goTo(index) {
-    slides[current].style.opacity = '0';
-    dotsWrap.children[current].classList.remove('active');
-    current = index;
-    slides[current].style.opacity = '1';
-    dotsWrap.children[current].classList.add('active');
-  }
-
-  setInterval(() => {
-    goTo((current + 1) % slides.length);
-  }, 5000);
-}
-
-async function loadBestsellers() {
-  const grid = document.getElementById('bestsellerGrid');
-  if (!grid) return;
-  try {
-    const res = await fetch(window.API_BASE_URL + '/api/products');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const products = await res.json();
-    const featured = products.filter((p) => p.badge).slice(0, 4);
-    const list = featured.length ? featured : products.slice(0, 4);
-    grid.innerHTML = list.map(productCardHTML).join('');
-  } catch (err) {
-    console.error('loadBestsellers error:', err);
-    grid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Could not load products right now.</p>';
-  }
+  setTimeout(goToLogin, 6000);
 }
