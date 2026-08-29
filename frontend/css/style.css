@@ -450,6 +450,7 @@ table.orders-table tbody tr:hover { background: #FBF7FE; }
   .confirm-order-number { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .confirm-detail-card { box-shadow: none !important; border: 1px solid #ccc !important; break-inside: avoid; page-break-inside: avoid; }
   .confirm-item-row { break-inside: avoid; page-break-inside: avoid; }
+  .shop-contact-print { display: block !important; }
   .btn { display: none !important; }
   .summary-row, .summary-row.total { break-inside: avoid; page-break-inside: avoid; }
   a { text-decoration: none !important; color: inherit !important; }

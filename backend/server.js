@@ -4,6 +4,7 @@ const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 
 const mongoose = require('mongoose');
 
@@ -55,6 +56,33 @@ app.use(cors({
   credentials: true,
 }));
 
+// Rate limit for auth endpoints (login, register) - 10 attempts per 15 minutes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: 'Too many attempts. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Rate limit for order creation - 5 per 15 minutes
+const orderLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: 'Too many orders. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Rate limit for contact form - 3 per 15 minutes
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 3,
+  message: { error: 'Too many messages. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 if (!process.env.SESSION_SECRET) {
   console.warn('WARNING: SESSION_SECRET is not set. Using insecure dev fallback. Set SESSION_SECRET in production.');
 }
@@ -81,6 +109,12 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
 });
+
+// Apply rate limiters
+app.use('/api/user/login', authLimiter);
+app.use('/api/user/register', authLimiter);
+app.use('/api/orders', orderLimiter);
+app.use('/api/contact', contactLimiter);
 
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);

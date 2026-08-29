@@ -157,9 +157,9 @@ function handleAddToCart() {
   });
 
   addToCart({
-    product_id: null,
+    product_id: 'custom-hamper',
     product_name: 'Custom Hamper',
-    slug: null,
+    slug: 'custom-hamper',
     image: HAMPER_PREVIEW_IMAGE,
     unit_price: unitPrice,
     quantity,

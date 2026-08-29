@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 // POST /api/admin/hamper-components - create new component
 router.post('/', async (req, res) => {
   const { category, name, price, description, sort_order } = req.body || {};
-  if (!category || !name || price == null) {
+  if (!category || !name || price == null || isNaN(Number(price))) {
     return res.status(400).json({ error: 'category, name, and price are required.' });
   }
   try {

@@ -72,7 +72,10 @@ function render(order) {
         ${order.gift_note ? `<p style="margin-top:10px;"><strong>Note:</strong> ${escapeHtml(order.gift_note)}</p>` : ''}
       </div>
 
-      <div style="display:flex; gap:14px; justify-content:center; margin-top:30px; flex-wrap:wrap;">
+      <div class="shop-contact-print" style="margin-top:30px; padding-top:20px; border-top:1px dashed #EEE6F7; font-size:0.82rem; color:var(--charcoal-soft); text-align:center;">
+        <p style="margin:0;"><strong>G_giftrees</strong> &middot; Pondicherry &middot; +91 78451 20668 &middot; ggiftrees31@gmail.com</p>
+      </div>
+      <div style="display:flex; gap:14px; justify-content:center; margin-top:14px; flex-wrap:wrap;">
         <button class="btn btn-outline" onclick="window.print()">Print Receipt</button>
         <a href="products.html" class="btn btn-primary">Continue Shopping</a>
       </div>

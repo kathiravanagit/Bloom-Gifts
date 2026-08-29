@@ -8,14 +8,14 @@ function formatMoney(n) {
 
 function getCart() {
   try {
-    return JSON.parse(sessionStorage.getItem(CART_KEY)) || [];
+    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
   } catch (e) {
     return [];
   }
 }
 
 function saveCart(cart) {
-  sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
   updateCartBadge();
 }
 
@@ -58,7 +58,7 @@ function escapeHtml(str) {
 }
 
 function clearCart() {
-  sessionStorage.removeItem(CART_KEY);
+  localStorage.removeItem(CART_KEY);
   updateCartBadge();
 }
 
@@ -73,6 +73,8 @@ function showToast(message) {
     toast = document.createElement('div');
     toast.id = 'siteToast';
     toast.className = 'toast';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     document.body.appendChild(toast);
   }
   toast.textContent = message;

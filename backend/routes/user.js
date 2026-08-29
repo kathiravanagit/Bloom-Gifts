@@ -49,6 +49,7 @@ router.post('/login', async (req, res) => {
     req.session.userPhone = user.phone;
     if (remember) {
       req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+      req.session.cookie.originalMaxAge = 30 * 24 * 60 * 60 * 1000;
     }
     res.json({ ok: true, user: { id: user._id.toString(), name: user.name, email: user.email, phone: user.phone } });
   } catch (err) {
