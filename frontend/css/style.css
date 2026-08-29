@@ -466,59 +466,126 @@ table.orders-table tbody tr:hover { background: #FBF7FE; }
 /* ---------- Welcome overlay ---------- */
 .welcome-overlay {
   position: fixed; inset: 0; z-index: 9999;
-  background: linear-gradient(135deg, #4a2d5e 0%, #6b4f87 40%, #8b6aae 70%, #a88bc4 100%);
+  background: radial-gradient(ellipse at 30% 20%, #3d1f5c 0%, #1a0e2e 50%, #0d0618 100%);
   display: flex; align-items: center; justify-content: center;
-  animation: welcomeFadeIn 0.6s ease;
+  overflow: hidden;
 }
 .welcome-overlay.fade-out {
-  animation: welcomeFadeOut 0.6s ease forwards;
+  animation: welcomeFadeOut 0.8s ease forwards;
 }
-@keyframes welcomeFadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes welcomeFadeOut { from { opacity: 1; } to { opacity: 0; pointer-events: none; } }
+@keyframes welcomeFadeOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.1); pointer-events: none; }
+}
 
-.welcome-content {
-  text-align: center; color: white; z-index: 2; padding: 20px;
-  animation: welcomeSlideUp 0.8s ease 0.3s both;
+.welcome-bg-layers { position: absolute; inset: 0; pointer-events: none; }
+
+/* Animated bokeh / glowing orbs */
+.welcome-bokeh { position: absolute; inset: 0; }
+.bokeh-orb {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, var(--orb-color, rgba(168,139,196,0.35)) 0%, transparent 70%);
+  animation: bokehFloat var(--orb-duration, 8s) var(--orb-delay, 0s) ease-in-out infinite alternate;
+  filter: blur(var(--orb-blur, 20px));
 }
-@keyframes welcomeSlideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes bokehFloat {
+  0% { transform: translate(0, 0) scale(1); opacity: var(--orb-opacity, 0.4); }
+  50% { transform: translate(var(--orb-dx, 30px), var(--orb-dy, -20px)) scale(1.15); opacity: calc(var(--orb-opacity, 0.4) * 1.3); }
+  100% { transform: translate(calc(var(--orb-dx, 30px) * -0.6), calc(var(--orb-dy, -20px) * 0.8)) scale(0.9); opacity: var(--orb-opacity, 0.4); }
 }
-.welcome-brand { margin-bottom: 18px; }
-.welcome-brand svg { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2)); }
-.welcome-title {
-  font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 700; margin: 0 0 10px; line-height: 1.15;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.2);
-}
-.welcome-title em { font-style: normal; color: var(--gold-soft); }
-.welcome-subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.3rem); margin: 0 0 30px;
-  opacity: 0.9; font-weight: 300; letter-spacing: 0.02em;
-}
-.welcome-btn {
-  padding: 14px 40px; font-size: 1rem; border-radius: 999px;
-  background: white; color: var(--plum-deep); border: none; cursor: pointer;
-  font-weight: 700; transition: transform 0.2s, box-shadow 0.2s;
-}
-.welcome-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.25); }
 
 /* Falling petals */
-.welcome-petals {
-  position: absolute; inset: 0; overflow: hidden; z-index: 1; pointer-events: none;
-}
+.welcome-petals { position: absolute; inset: 0; overflow: hidden; }
 .petal {
-  position: absolute; top: -40px;
+  position: absolute; top: -50px;
   width: var(--size, 18px); height: var(--size, 18px);
   background: var(--petal-color, #d4b8e8);
   border-radius: 50% 0 50% 0;
-  opacity: var(--opacity, 0.6);
+  opacity: 0;
   animation: petalFall var(--duration, 4s) var(--delay, 0s) linear infinite;
-  transform: rotate(var(--rotate, 45deg));
 }
 @keyframes petalFall {
-  0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
-  10% { opacity: var(--opacity, 0.6); }
-  90% { opacity: var(--opacity, 0.6); }
-  100% { transform: translateY(110vh) rotate(720deg) translateX(var(--drift, 40px)); opacity: 0; }
+  0% { transform: translateY(-5vh) rotate(0deg) translateX(0); opacity: 0; }
+  8% { opacity: var(--petal-opacity, 0.7); }
+  85% { opacity: var(--petal-opacity, 0.7); }
+  100% { transform: translateY(108vh) rotate(600deg) translateX(var(--drift, 40px)); opacity: 0; }
 }
+
+/* Sparkle particles */
+.welcome-sparkles { position: absolute; inset: 0; }
+.sparkle {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%;
+  background: white; opacity: 0;
+  animation: sparkleGlow var(--spark-duration, 2s) var(--spark-delay, 0s) ease-in-out infinite;
+}
+@keyframes sparkleGlow {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: var(--spark-opacity, 0.8); transform: scale(1.2); }
+}
+
+/* Content */
+.welcome-content {
+  position: relative; z-index: 2; text-align: center;
+  padding: 20px; max-width: 500px;
+}
+.welcome-logo-ring {
+  width: 90px; height: 90px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  animation: logoPulse 3s ease-in-out infinite, logoEntrance 0.8s ease 0.2s both;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+}
+@keyframes logoPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.15); }
+  50% { box-shadow: 0 0 0 18px rgba(255,255,255,0); }
+}
+@keyframes logoEntrance {
+  from { opacity: 0; transform: scale(0.5) rotate(-20deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+.welcome-title {
+  font-family: var(--font-display); margin: 0; line-height: 1;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.wt-line1 {
+  display: block; font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+  font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  animation: textReveal 0.6s ease 0.5s both;
+}
+.wt-line2 {
+  display: block; font-size: clamp(2.8rem, 7vw, 4.5rem);
+  font-weight: 800; color: white;
+  text-shadow: 0 0 40px rgba(168,139,196,0.5), 0 4px 20px rgba(0,0,0,0.3);
+  animation: textReveal 0.6s ease 0.7s both;
+}
+.wt-line2 em { font-style: normal; color: #d4a843; }
+.welcome-divider {
+  width: 60px; height: 2px; margin: 18px auto;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: dividerGrow 0.6s ease 0.9s both;
+}
+@keyframes dividerGrow { from { width: 0; opacity: 0; } to { width: 60px; opacity: 1; } }
+@keyframes textReveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.welcome-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.25rem); margin: 0 0 36px;
+  color: rgba(255,255,255,0.85); font-weight: 300; letter-spacing: 0.04em;
+  animation: textReveal 0.6s ease 1.1s both;
+}
+.welcome-enter-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 44px; border-radius: 999px; border: none; cursor: pointer;
+  background: linear-gradient(135deg, #d4a843 0%, #c9a227 50%, #b8912a 100%);
+  color: #1a0e2e; font-weight: 700; font-size: 1rem; letter-spacing: 0.02em;
+  box-shadow: 0 4px 20px rgba(212,168,67,0.35), 0 0 0 0 rgba(212,168,67,0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: textReveal 0.6s ease 1.3s both;
+}
+.welcome-enter-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(212,168,67,0.45), 0 0 0 6px rgba(212,168,67,0.15);
+}
+.welcome-enter-btn:active { transform: translateY(0) scale(0.98); }
