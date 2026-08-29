@@ -58,8 +58,8 @@ button { font-family: inherit; cursor: pointer; }
 }
 .btn-primary { background: var(--plum-deep); color: var(--white); }
 .btn-primary:hover { background: #58396f; box-shadow: var(--shadow-lift); transform: translateY(-2px); }
-.btn-outline { border-color: var(--plum-deep); color: var(--plum-deep); background: transparent; transition: background 0.2s ease, color 0.2s ease; }
-.btn-outline:hover { background: #2c1542; color: var(--white); }
+.btn-outline { border-color: var(--plum-deep); color: var(--plum-deep); background: transparent; transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; }
+.btn-outline:hover { background: #58396f; color: var(--white); box-shadow: var(--shadow-lift); transform: translateY(-2px); }
 .btn-block { width: 100%; }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
 
