@@ -361,10 +361,8 @@ function switchProdTab(tab) {
   document.getElementById('compList').style.display = tab === 'components' ? 'block' : 'none';
   document.getElementById('itemForm').style.display = 'none';
   const tp = document.getElementById('tabProducts'), tc = document.getElementById('tabComponents');
-  tp.style.borderColor = tab === 'products' ? 'var(--plum-deep)' : '#ccc';
-  tp.style.color = tab === 'products' ? 'var(--plum-deep)' : 'inherit';
-  tc.style.borderColor = tab === 'components' ? 'var(--plum-deep)' : '#ccc';
-  tc.style.color = tab === 'components' ? 'var(--plum-deep)' : 'inherit';
+  tp.classList.toggle('tab-active', tab === 'products');
+  tc.classList.toggle('tab-active', tab === 'components');
   if (tab === 'products') loadProductsList(); else loadComponentsList();
 }
 
