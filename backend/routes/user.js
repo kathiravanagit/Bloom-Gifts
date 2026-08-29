@@ -24,6 +24,8 @@ router.post('/register', async (req, res) => {
     const user = await User.create({ name, email: email.toLowerCase(), password: hash, phone });
     req.session.userId = user._id.toString();
     req.session.userName = user.name;
+    req.session.userEmail = user.email;
+    req.session.userPhone = user.phone;
     res.status(201).json({ ok: true, user: { id: user._id.toString(), name: user.name, email: user.email, phone: user.phone } });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -43,6 +45,8 @@ router.post('/login', async (req, res) => {
     if (!match) return res.status(401).json({ error: 'Invalid email or password.' });
     req.session.userId = user._id.toString();
     req.session.userName = user.name;
+    req.session.userEmail = user.email;
+    req.session.userPhone = user.phone;
     if (remember) {
       req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
     }
@@ -60,7 +64,7 @@ router.post('/logout', (req, res) => {
 // GET /api/user/session
 router.get('/session', (req, res) => {
   if (!req.session || !req.session.userId) return res.json({ loggedIn: false });
-  res.json({ loggedIn: true, userId: req.session.userId, userName: req.session.userName });
+  res.json({ loggedIn: true, userId: req.session.userId, userName: req.session.userName, userEmail: req.session.userEmail || '', userPhone: req.session.userPhone || '' });
 });
 
 // GET /api/user/orders
