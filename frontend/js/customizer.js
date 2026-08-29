@@ -134,9 +134,9 @@ function renderOptionGroups() {
     pill.addEventListener('click', (e) => {
       e.preventDefault();
       const gIdx = Number(pill.dataset.group);
-      const optId = Number(pill.dataset.option);
+      const optId = pill.dataset.option;
       const group = product.option_groups[gIdx];
-      const opt = group.options.find((o) => o.id === optId);
+      const opt = group.options.find((o) => String(o.id) === optId);
 
       if (group.type === 'single') {
         selections[group.name] = opt;
