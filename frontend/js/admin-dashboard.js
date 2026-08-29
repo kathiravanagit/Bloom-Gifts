@@ -233,7 +233,7 @@ async function showDetail(orderId) {
     <a href="#" id="backToList" style="font-weight:700;">&larr; Back to all orders</a>
     <h2 style="margin-top:16px;">Order ${order.order_number}</h2>
 
-    <div style="display:grid; grid-template-columns: 1.4fr 1fr; gap: 30px; margin-top:20px; align-items:start;">
+    <div class="admin-detail-grid" style="margin-top:20px;">
       <div class="admin-table-card" style="padding:24px;">
         <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin-bottom:14px;">Items</h4>
         ${itemsHTML}
