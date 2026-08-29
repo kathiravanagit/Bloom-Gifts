@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
         email: email.trim(),
         mobile: mobile.trim(),
         gift_note: (gift_note || '').trim(),
-        payment_method: payment_method || 'Pay on Delivery',
+        payment_method: payment_method || 'Pay on Collection',
         total_amount: 0,
         items: items.map(item => ({
           product_id: item.product_id || null,

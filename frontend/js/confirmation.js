@@ -56,7 +56,7 @@ function render(order) {
     <div class="confirm-box">
       <div class="confirm-check"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 7"/></svg></div>
       <h2>Thank you, ${escapeHtml(order.guest_name)}!</h2>
-       <p>Your order has been placed and will be paid on <strong>delivery when you receive it</strong>.</p>
+       <p>Your order has been placed. Pay in cash when you <strong>collect from our store</strong>.</p>
       <div class="confirm-order-number">Order #${escapeHtml(order.order_number)}</div>
 
       <div class="confirm-detail-card">

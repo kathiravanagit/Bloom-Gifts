@@ -132,7 +132,7 @@ function renderFooter() {
       <div class="footer-grid">
         <div>
           <div class="footer-brand"><img src="assets/images/favicon.jpg" alt="" class="footer-brand-mark"> G_giftrees</div>
-          <p style="color: rgba(255,255,255,0.7); max-width: 280px;">Handcrafted bouquets and curated gift hampers, arranged with a little lavender magic and delivered with care.</p>
+          <p style="color: rgba(255,255,255,0.7); max-width: 280px;">Handcrafted bouquets and curated gift hampers, arranged with a little lavender magic and crafted with care.</p>
         </div>
         <div>
           <h4>Shop</h4>

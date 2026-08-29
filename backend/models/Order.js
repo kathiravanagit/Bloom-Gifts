@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema({
   city: { type: String },
   postal_code: { type: String },
   gift_note: String,
-  payment_method: { type: String, default: 'Pay on Delivery' },
+  payment_method: { type: String, default: 'Pay on Collection' },
   status: { type: String, default: 'Pending' },
   total_amount: { type: Number, required: true },
   created_at: { type: Date, default: Date.now },

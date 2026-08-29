@@ -51,14 +51,14 @@ function renderLoggedInView(cart) {
 
       <div class="form-field full" style="margin-top:18px;">
         <label for="gift_note">Delivery Notes (optional)</label>
-        <textarea id="gift_note" name="gift_note" placeholder="e.g. leave with the guard, call on arrival..."></textarea>
+        <textarea id="gift_note" name="gift_note" placeholder="e.g. any pickup notes..."></textarea>
       </div>
 
       <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin: 26px 0 10px;">Payment Method</h4>
       <label class="payment-option">
-        <input type="radio" name="payment_method" value="Pay on Delivery" checked style="width:18px; height:18px;">
+        <input type="radio" name="payment_method" value="Pay on Collection" checked style="width:18px; height:18px;">
         <span class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="6" width="19.4" height="12" rx="1.6"/><circle cx="12" cy="12" r="2.6"/><path d="M5.3 9v0M18.7 15v0"/></svg></span>
-        <span>Pay on Delivery &mdash; pay when you receive your gift</span>
+        <span>Pay on Collection &mdash; pick up from store and pay in cash</span>
       </label>
 
       <button type="submit" class="btn btn-primary btn-block" style="margin-top:26px;" id="placeOrderBtn">Confirm Order</button>
@@ -85,14 +85,14 @@ function renderLoggedInView(cart) {
 
       <div class="form-field full" style="margin-top:12px;">
         <label for="gift_note_edit">Delivery Notes (optional)</label>
-        <textarea id="gift_note_edit" name="gift_note" placeholder="e.g. leave with the guard, call on arrival..."></textarea>
+        <textarea id="gift_note_edit" name="gift_note" placeholder="e.g. any pickup notes..."></textarea>
       </div>
 
       <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin: 26px 0 10px;">Payment Method</h4>
       <label class="payment-option">
-        <input type="radio" name="payment_method" value="Pay on Delivery" checked style="width:18px; height:18px;">
+        <input type="radio" name="payment_method" value="Pay on Collection" checked style="width:18px; height:18px;">
         <span class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="6" width="19.4" height="12" rx="1.6"/><circle cx="12" cy="12" r="2.6"/><path d="M5.3 9v0M18.7 15v0"/></svg></span>
-        <span>Pay on Delivery &mdash; pay when you receive your gift</span>
+        <span>Pay on Collection &mdash; pick up from store and pay in cash</span>
       </label>
 
       <div style="display:flex; gap:10px; margin-top:26px;">
@@ -117,7 +117,7 @@ function renderLoggedInView(cart) {
 
 function renderGuestView() {
   document.getElementById('sectionTitle').textContent = 'Checkout as Guest';
-  document.getElementById('sectionSubtitle').textContent = 'No account needed \u2014 just your delivery details.';
+  document.getElementById('sectionSubtitle').textContent = 'No account needed \u2014 just your details.';
 
   const form = document.getElementById('checkoutForm');
   form.innerHTML = `
@@ -141,14 +141,14 @@ function renderGuestView() {
 
     <div class="form-field full">
       <label for="gift_note">Delivery Notes (optional)</label>
-      <textarea id="gift_note" name="gift_note" placeholder="e.g. leave with the guard, call on arrival..."></textarea>
+      <textarea id="gift_note" name="gift_note" placeholder="e.g. any pickup notes..."></textarea>
     </div>
 
     <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin: 26px 0 10px;">Payment Method</h4>
     <label class="payment-option">
-      <input type="radio" name="payment_method" value="Pay on Delivery" checked style="width:18px; height:18px;">
-      <span class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="6" width="19.4" height="12" rx="1.6"/><circle cx="12" cy="12" r="2.6"/><path d="M5.3 9v0M18.7 15v0"/></svg></span>
-      <span>Pay on Delivery &mdash; pay when you receive your gift</span>
+        <input type="radio" name="payment_method" value="Pay on Collection" checked style="width:18px; height:18px;">
+        <span class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="6" width="19.4" height="12" rx="1.6"/><circle cx="12" cy="12" r="2.6"/><path d="M5.3 9v0M18.7 15v0"/></svg></span>
+        <span>Pay on Collection &mdash; pick up from store and pay in cash</span>
     </label>
 
     <button type="submit" class="btn btn-primary btn-block" style="margin-top:26px;" id="placeOrderBtn">Place Order</button>
@@ -183,7 +183,7 @@ function buildPayload(name, email, mobile, giftNote) {
     email: email,
     mobile: mobile,
     gift_note: giftNote,
-    payment_method: 'Pay on Delivery',
+    payment_method: 'Pay on Collection',
     items: cart.map((i) => ({
       product_id: i.product_id,
       product_name: i.product_name,
