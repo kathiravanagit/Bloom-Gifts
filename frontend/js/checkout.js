@@ -117,7 +117,7 @@ function renderLoggedInView(cart) {
 
 function renderGuestView() {
   document.getElementById('sectionTitle').textContent = 'Checkout as Guest';
-  document.getElementById('sectionSubtitle').textContent = 'No account needed \u2014 just your details.';
+  document.getElementById('sectionSubtitle').textContent = 'A simple process \u2014 just your details.';
 
   const form = document.getElementById('checkoutForm');
   form.innerHTML = `
