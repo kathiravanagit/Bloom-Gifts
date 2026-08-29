@@ -33,9 +33,10 @@
           <label for="r_phone">Phone</label>
           <input type="tel" id="r_phone" required placeholder="+91 78451 20668">
         </div>
-        <div class="form-field">
+        <div class="form-field" style="position:relative;">
           <label for="r_password">Password</label>
-          <input type="password" id="r_password" required minlength="6" placeholder="At least 6 characters">
+          <input type="password" id="r_password" required minlength="6" placeholder="At least 6 characters" style="padding-right:40px;">
+          <button type="button" class="toggle-pw" onclick="const p=document.getElementById('r_password');p.type=p.type==='password'?'text':'password';this.textContent=p.type==='password'?'&#128065;':'&#128064;'" style="position:absolute; right:10px; top:38px; background:none; border:none; cursor:pointer; font-size:1.1rem; color:var(--charcoal-soft);">&#128065;</button>
         </div>
         <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">Create Account</button>
       </form>
