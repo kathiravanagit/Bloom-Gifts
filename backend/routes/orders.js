@@ -42,6 +42,7 @@ router.post('/', async (req, res) => {
 
       const newOrder = new Order({
         order_number: orderNumber,
+        user_id: (req.session && req.session.userId) || null,
         guest_name: guest_name.trim(),
         email: email.trim(),
         mobile: mobile.trim(),

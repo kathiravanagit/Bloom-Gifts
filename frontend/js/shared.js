@@ -79,6 +79,7 @@ const BRAND_MARK_SVG = '<svg viewBox="0 0 24 24" width="18" height="18"><circle 
 const BAG_ICON_SVG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12a2 2 0 0 1-2 1.8H9A2 2 0 0 1 7 20L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
 const MENU_ICON_SVG = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
 const INSTAGRAM_ICON_SVG = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17" cy="7" r="1" fill="currentColor" stroke="none"/></svg>';
+const USER_ICON_SVG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
 
 const NAV_LINKS = [
   { href: 'index.html', label: 'Home', page: 'home' },
@@ -101,6 +102,7 @@ function renderHeader() {
       <a href="index.html" class="brand"><img src="assets/images/favicon.jpg" alt="" class="header-brand-mark"> G_giftrees</a>
       <nav class="nav-links" id="navLinks">
         ${links}
+        <a href="account.html" class="nav-cart" id="accountLink">${USER_ICON_SVG} <span id="accountLabel">Account</span></a>
         <a href="cart.html" class="nav-cart">${BAG_ICON_SVG} Cart<span class="cart-count" id="cartCount">0</span></a>
       </nav>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">${MENU_ICON_SVG}</button>
@@ -111,6 +113,7 @@ function renderHeader() {
     document.getElementById('navLinks').classList.toggle('open');
   });
   updateCartBadge();
+  checkUserSession();
 }
 
 function renderFooter() {
@@ -125,7 +128,7 @@ function renderFooter() {
         </div>
         <div>
           <h4>Shop</h4>
-          <a href="products.html?category=bouquets">AllCustomized Bouquets</a>
+          <a href="products.html?category=bouquets">Customized Bouquets</a>
           <a href="products.html?category=hampers">Gift Hampers</a>
           <a href="products.html?category=chocolate">Chocolate Hampers</a>
           <a href="products.html?category=albums">Albums</a>
@@ -170,6 +173,21 @@ function productCardHTML(p) {
       </div>
     </a>
   `;
+}
+
+async function checkUserSession() {
+  try {
+    const res = await fetch(window.API_BASE_URL + '/api/user/session', { credentials: 'include' });
+    const session = await res.json();
+    const label = document.getElementById('accountLabel');
+    if (session.loggedIn) {
+      if (label) label.textContent = session.userName.split(' ')[0];
+    } else {
+      if (label) label.textContent = 'Login';
+      const link = document.getElementById('accountLink');
+      if (link) link.href = 'user-login.html';
+    }
+  } catch (e) { /* ignore */ }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

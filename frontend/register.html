@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
+<title>Register | G_giftrees</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="register">
+
+<header id="site-header"></header>
+
+<section class="section" style="padding-top:48px;">
+  <div class="container" style="max-width:480px;">
+    <div class="section-head">
+      <span class="eyebrow">Join G_giftrees</span>
+      <h2>Create your account</h2>
+      <p>Track your orders, save your favourites, and get personalised gift suggestions.</p>
+    </div>
+
+    <div class="admin-table-card" style="padding:28px;">
+      <form id="registerForm">
+        <div class="form-field">
+          <label for="r_name">Full Name</label>
+          <input type="text" id="r_name" required placeholder="Your name">
+        </div>
+        <div class="form-field">
+          <label for="r_email">Email</label>
+          <input type="email" id="r_email" required placeholder="you@example.com">
+        </div>
+        <div class="form-field">
+          <label for="r_phone">Phone</label>
+          <input type="tel" id="r_phone" required placeholder="+91 78451 20668">
+        </div>
+        <div class="form-field">
+          <label for="r_password">Password</label>
+          <input type="password" id="r_password" required minlength="6" placeholder="At least 6 characters">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">Create Account</button>
+      </form>
+      <p style="text-align:center; margin-top:18px; font-size:0.88rem; color:var(--charcoal-soft);">
+        Already have an account? <a href="user-login.html" style="font-weight:700; color:var(--plum-deep);">Log in</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="/config.js"></script>
+  <script src="js/shared.js"></script>
+<script>
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('r_name').value.trim();
+    const email = document.getElementById('r_email').value.trim();
+    const phone = document.getElementById('r_phone').value.trim();
+    const password = document.getElementById('r_password').value;
+    if (!name || !email || !phone || !password) { showToast('Please fill in all fields.'); return; }
+    try {
+      const res = await fetch(window.API_BASE_URL + '/api/user/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name, email, phone, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Registration failed'); return; }
+      showToast('Welcome to G_giftrees, ' + data.user.name + '!');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+    } catch (err) { showToast('Could not register. Please try again.'); }
+  });
+</script>
+</body>
+</html>

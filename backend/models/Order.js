@@ -11,6 +11,7 @@ const orderItemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema({
   order_number: { type: String, unique: true, required: true },
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   guest_name: { type: String, required: true },
   email: { type: String, required: true },
   mobile: { type: String, required: true },

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
+<title>My Account | G_giftrees</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="account">
+
+<header id="site-header"></header>
+
+<section class="section" style="padding-top:48px;">
+  <div class="container">
+    <div id="accountContent">
+      <p style="text-align:center; padding:40px;">Loading your account&hellip;</p>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="/config.js"></script>
+  <script src="js/shared.js"></script>
+<script>
+const STATUS_COLORS = {
+  Pending: '#c2882d',
+  Confirmed: '#2d7ec2',
+  'Out for Delivery': '#6a4ec2',
+  Delivered: '#2d9c5a',
+  Cancelled: '#c24040',
+};
+
+async function init() {
+  const root = document.getElementById('accountContent');
+  try {
+    const sr = await fetch(window.API_BASE_URL + '/api/user/session', { credentials: 'include' });
+    const session = await sr.json();
+    if (!session.loggedIn) {
+      root.innerHTML = `
+        <div class="section-head">
+          <span class="eyebrow">Account</span>
+          <h2>Please log in</h2>
+          <p>You need an account to view your orders and wishlist.</p>
+          <div style="display:flex; gap:12px; justify-content:center; margin-top:18px;">
+            <a href="user-login.html" class="btn btn-primary">Log In</a>
+            <a href="register.html" class="btn btn-outline">Create Account</a>
+          </div>
+        </div>`;
+      return;
+    }
+
+    const [ordersRes, wishlistRes] = await Promise.all([
+      fetch(window.API_BASE_URL + '/api/user/orders', { credentials: 'include' }),
+      fetch(window.API_BASE_URL + '/api/user/wishlist', { credentials: 'include' }),
+    ]);
+    const orders = await ordersRes.json();
+    const wishlist = await wishlistRes.json();
+
+    root.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:28px;">
+        <div>
+          <h2 style="margin-bottom:2px;">Hello, ${escapeHtml(session.userName)}</h2>
+          <p style="color:var(--charcoal-soft); margin:0;">Manage your orders and wishlist.</p>
+        </div>
+        <button class="btn btn-outline" id="logoutBtn" style="font-size:0.82rem; padding:6px 16px;">Log Out</button>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-bottom:22px; flex-wrap:wrap;">
+        <button class="btn btn-outline tab-btn active" data-tab="orders">My Orders (${orders.length})</button>
+        <button class="btn btn-outline tab-btn" data-tab="wishlist">Wishlist (${wishlist.length})</button>
+      </div>
+
+      <div id="tabOrders"></div>
+      <div id="tabWishlist" style="display:none;"></div>
+    `;
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch(window.API_BASE_URL + '/api/user/logout', { method: 'POST', credentials: 'include' });
+      window.location.href = 'index.html';
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tabOrders').style.display = btn.dataset.tab === 'orders' ? 'block' : 'none';
+        document.getElementById('tabWishlist').style.display = btn.dataset.tab === 'wishlist' ? 'block' : 'none';
+      });
+    });
+
+    const ordersEl = document.getElementById('tabOrders');
+    if (!orders.length) {
+      ordersEl.innerHTML = '<div class="admin-table-card" style="padding:30px; text-align:center; color:var(--charcoal-soft);">No orders yet. <a href="products.html" style="font-weight:700; color:var(--plum-deep);">Start shopping</a></div>';
+    } else {
+      ordersEl.innerHTML = `<div class="table-scroll"><table class="orders-table"><thead><tr><th>Order #</th><th>Date</th><th>Items</th><th>Status</th><th>Total</th></tr></thead><tbody>
+        ${orders.map(o => `<tr>
+          <td><strong>${escapeHtml(o.order_number)}</strong></td>
+          <td>${new Date(o.created_at).toLocaleDateString()}</td>
+          <td>${o.items.map(i => `${i.quantity}× ${escapeHtml(i.product_name)}`).join('<br>')}</td>
+          <td><span style="display:inline-block; padding:3px 10px; border-radius:12px; font-size:0.78rem; font-weight:700; color:#fff; background:${STATUS_COLORS[o.status] || '#888'};">${escapeHtml(o.status)}</span></td>
+          <td>${o.total_amount ? formatMoney(o.total_amount) : 'TBD'}</td>
+        </tr>`).join('')}
+      </tbody></table></div>`;
+    }
+
+    const wishEl = document.getElementById('tabWishlist');
+    if (!wishlist.length) {
+      wishEl.innerHTML = '<div class="admin-table-card" style="padding:30px; text-align:center; color:var(--charcoal-soft);">Your wishlist is empty. Tap the heart on any product to save it here.</div>';
+    } else {
+      wishEl.innerHTML = `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:18px;">
+        ${wishlist.map(w => `
+          <div class="admin-table-card" style="padding:0; overflow:hidden;">
+            <img src="${escapeHtml(w.image || '')}" style="width:100%; height:160px; object-fit:cover;" onerror="this.style.display='none'">
+            <div style="padding:14px;">
+              <a href="product-detail.html?slug=${escapeHtml(w.slug || '')}" style="font-weight:700; color:inherit; text-decoration:none;">${escapeHtml(w.product_name)}</a>
+              <div style="margin-top:8px; display:flex; gap:8px;">
+                <a href="product-detail.html?slug=${escapeHtml(w.slug || '')}" class="btn btn-primary" style="font-size:0.78rem; padding:5px 12px;">View</a>
+                <button class="btn btn-outline remove-wish" data-pid="${w.product_id}" style="font-size:0.78rem; padding:5px 12px; background:#f6dede; color:#8a1f1f; border-color:#f6dede;">Remove</button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+
+      wishEl.querySelectorAll('.remove-wish').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await fetch(window.API_BASE_URL + '/api/user/wishlist/' + btn.dataset.pid, { method: 'DELETE', credentials: 'include' });
+          showToast('Removed from wishlist');
+          init();
+        });
+      });
+    }
+  } catch (err) {
+    root.innerHTML = '<p style="text-align:center; padding:40px; color:#c24040;">Could not load your account.</p>';
+  }
+}
+
+function escapeHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function formatMoney(n) { return '₹' + Number(n).toFixed(2); }
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

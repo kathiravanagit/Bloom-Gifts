@@ -1,7 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
   initHeroSlideshow();
   loadBestsellers();
+  showWelcomeBanner();
 });
+
+async function showWelcomeBanner() {
+  try {
+    const res = await fetch(window.API_BASE_URL + '/api/user/session', { credentials: 'include' });
+    const session = await res.json();
+    if (!session.loggedIn) {
+      document.getElementById('welcomeBanner').style.display = 'block';
+    }
+  } catch (e) { /* show banner on error too */ document.getElementById('welcomeBanner').style.display = 'block'; }
+}
 
 function initHeroSlideshow() {
   const slides = Array.from(document.querySelectorAll('.hero-media'));

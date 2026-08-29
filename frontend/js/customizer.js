@@ -87,6 +87,7 @@ function render() {
         </div>
 
         <button class="btn btn-primary btn-block" id="addToCartBtn">Add to Cart &mdash; <span id="btnPrice">Custom</span></button>
+        <button class="btn btn-outline btn-block" id="remindMeBtn" style="margin-top:10px; border-color:var(--plum-deep); color:var(--plum-deep);">&#9825; Remind Me Later</button>
         <p style="margin-top:14px;"><a href="products.html">&larr; Back to shop</a></p>
       </div>
     </div>
@@ -103,6 +104,7 @@ function render() {
   document.getElementById('qtyMinus').addEventListener('click', () => changeQty(-1));
   document.getElementById('qtyPlus').addEventListener('click', () => changeQty(1));
   document.getElementById('addToCartBtn').addEventListener('click', handleAddToCart);
+  document.getElementById('remindMeBtn').addEventListener('click', handleRemindMe);
 }
 
 function renderOptionGroups() {
@@ -221,5 +223,28 @@ function handleAddToCart() {
   document.getElementById('giftNote').value = '';
   document.getElementById('noteCount').textContent = '0';
   updateTray();
+}
+
+async function handleRemindMe() {
+  try {
+    const sr = await fetch(window.API_BASE_URL + '/api/user/session', { credentials: 'include' });
+    const session = await sr.json();
+    if (!session.loggedIn) {
+      showToast('Please log in to save items to your wishlist');
+      setTimeout(() => { window.location.href = 'user-login.html'; }, 1200);
+      return;
+    }
+    const res = await fetch(window.API_BASE_URL + '/api/user/wishlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ product_id: product.id, product_name: product.name, slug: product.slug, image: product.image }),
+    });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.error || 'Could not save'); return; }
+    showToast('Saved to your wishlist!');
+    document.getElementById('remindMeBtn').textContent = '\u2713 Saved to Wishlist';
+    document.getElementById('remindMeBtn').disabled = true;
+  } catch (e) { showToast('Could not save. Please try again.'); }
 }
 

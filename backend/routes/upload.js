@@ -3,6 +3,11 @@ const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
 
+function requireAdmin(req, res, next) {
+  if (!req.session || !req.session.admin) return res.status(401).json({ error: 'Unauthorized' });
+  next();
+}
+
 const storage = multer.diskStorage({
   destination: path.join(__dirname, '..', 'uploads'),
   filename: (req, file, cb) => {
@@ -24,6 +29,8 @@ const upload = multer({
     }
   },
 });
+
+router.use(requireAdmin);
 
 router.post('/', upload.single('image'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });

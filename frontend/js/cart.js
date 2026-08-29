@@ -42,10 +42,11 @@ function renderCart() {
     </div>
   `;
 
-  document.getElementById('cartItems').addEventListener('click', (e) => {
+  document.getElementById('cartItems').addEventListener('click', async (e) => {
     const minus = e.target.closest('[data-action="minus"]');
     const plus = e.target.closest('[data-action="plus"]');
     const remove = e.target.closest('[data-action="remove"]');
+    const remind = e.target.closest('[data-action="remind"]');
     if (minus) {
       const idx = Number(minus.dataset.index);
       const item = getCart()[idx];
@@ -56,6 +57,27 @@ function renderCart() {
       const item = getCart()[idx];
       updateCartQty(idx, item.quantity + 1);
       renderCart();
+    } else if (remind) {
+      const idx = Number(remind.dataset.index);
+      const item = getCart()[idx];
+      try {
+        const sr = await fetch(window.API_BASE_URL + '/api/user/session', { credentials: 'include' });
+        const session = await sr.json();
+        if (!session.loggedIn) {
+          showToast('Please log in to save items');
+          setTimeout(() => { window.location.href = 'user-login.html'; }, 1200);
+          return;
+        }
+        const res = await fetch(window.API_BASE_URL + '/api/user/wishlist', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+          body: JSON.stringify({ product_id: item.product_id, product_name: item.product_name, slug: item.slug, image: item.image }),
+        });
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error || 'Could not save'); return; }
+        removeFromCart(idx);
+        renderCart();
+        showToast('Saved to wishlist & removed from cart');
+      } catch (e) { showToast('Could not save'); }
     } else if (remove) {
       removeFromCart(Number(remove.dataset.index));
       renderCart();
@@ -77,6 +99,7 @@ function cartItemHTML(item, index) {
           <button type="button" data-action="plus" data-index="${index}">+</button>
         </div>
         <a href="#" class="remove-link" data-action="remove" data-index="${index}">Remove</a>
+        <a href="#" class="remove-link" data-action="remind" data-index="${index}" style="color:var(--plum-deep); margin-left:10px;">Remind Me</a>
       </div>
       <div style="text-align:right; font-weight:800; color:var(--plum-deep); font-family:var(--font-display); font-size:1.1rem;">
         Custom

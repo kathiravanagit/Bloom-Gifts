@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
+<title>Login | G_giftrees</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="user-login">
+
+<header id="site-header"></header>
+
+<section class="section" style="padding-top:48px;">
+  <div class="container" style="max-width:480px;">
+    <div class="section-head">
+      <span class="eyebrow">Welcome back</span>
+      <h2>Log in to your account</h2>
+      <p>View your orders, manage your wishlist, and pick up where you left off.</p>
+    </div>
+
+    <div class="admin-table-card" style="padding:28px;">
+      <form id="loginForm">
+        <div class="form-field">
+          <label for="l_email">Email</label>
+          <input type="email" id="l_email" required placeholder="you@example.com">
+        </div>
+        <div class="form-field">
+          <label for="l_password">Password</label>
+          <input type="password" id="l_password" required placeholder="Your password">
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin:8px 0 14px;">
+          <input type="checkbox" id="l_remember" style="width:16px; height:16px;">
+          <label for="l_remember" style="font-size:0.85rem; color:var(--charcoal-soft); cursor:pointer;">Remember me</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+      </form>
+      <p style="text-align:center; margin-top:18px; font-size:0.88rem; color:var(--charcoal-soft);">
+        Don't have an account? <a href="register.html" style="font-weight:700; color:var(--plum-deep);">Create one</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="/config.js"></script>
+  <script src="js/shared.js"></script>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('l_email').value.trim();
+    const password = document.getElementById('l_password').value;
+    const remember = document.getElementById('l_remember').checked;
+    if (!email || !password) { showToast('Please enter email and password.'); return; }
+    try {
+      const res = await fetch(window.API_BASE_URL + '/api/user/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, remember }),
+      });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Login failed'); return; }
+      showToast('Welcome back, ' + data.user.name + '!');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+    } catch (err) { showToast('Could not log in. Please try again.'); }
+  });
+</script>
+</body>
+</html>
