@@ -216,7 +216,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  renderHeader();
-  renderFooter();
+  const noChrome = ['user-login', 'register', 'admin-login'];
+
+  if (!noChrome.includes(page)) {
+    renderHeader();
+    renderFooter();
+  } else if (page === 'admin-login') {
+    renderFooter();
+  }
 });
 
