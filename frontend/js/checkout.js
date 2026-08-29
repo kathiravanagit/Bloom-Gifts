@@ -56,9 +56,9 @@ function renderLoggedInView(cart) {
 
       <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin: 26px 0 10px;">Payment Method</h4>
       <label class="payment-option">
-        <input type="radio" name="payment_method" value="Pay at Shop" checked style="width:18px; height:18px;">
+        <input type="radio" name="payment_method" value="Pay on Delivery" checked style="width:18px; height:18px;">
         <span class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="6" width="19.4" height="12" rx="1.6"/><circle cx="12" cy="12" r="2.6"/><path d="M5.3 9v0M18.7 15v0"/></svg></span>
-        <span>Pay at Shop &mdash; pay when you collect your gift</span>
+        <span>Pay on Delivery &mdash; pay when you receive your gift</span>
       </label>
 
       <button type="submit" class="btn btn-primary btn-block" style="margin-top:26px;" id="placeOrderBtn">Confirm Order</button>
@@ -90,9 +90,9 @@ function renderLoggedInView(cart) {
 
       <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin: 26px 0 10px;">Payment Method</h4>
       <label class="payment-option">
-        <input type="radio" name="payment_method" value="Pay at Shop" checked style="width:18px; height:18px;">
+        <input type="radio" name="payment_method" value="Pay on Delivery" checked style="width:18px; height:18px;">
         <span class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="6" width="19.4" height="12" rx="1.6"/><circle cx="12" cy="12" r="2.6"/><path d="M5.3 9v0M18.7 15v0"/></svg></span>
-        <span>Pay at Shop &mdash; pay when you collect your gift</span>
+        <span>Pay on Delivery &mdash; pay when you receive your gift</span>
       </label>
 
       <div style="display:flex; gap:10px; margin-top:26px;">
@@ -146,9 +146,9 @@ function renderGuestView() {
 
     <h4 style="text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin: 26px 0 10px;">Payment Method</h4>
     <label class="payment-option">
-      <input type="radio" name="payment_method" value="Pay at Shop" checked style="width:18px; height:18px;">
+      <input type="radio" name="payment_method" value="Pay on Delivery" checked style="width:18px; height:18px;">
       <span class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="6" width="19.4" height="12" rx="1.6"/><circle cx="12" cy="12" r="2.6"/><path d="M5.3 9v0M18.7 15v0"/></svg></span>
-      <span>Pay at Shop &mdash; pay when you collect your gift</span>
+      <span>Pay on Delivery &mdash; pay when you receive your gift</span>
     </label>
 
     <button type="submit" class="btn btn-primary btn-block" style="margin-top:26px;" id="placeOrderBtn">Place Order</button>
@@ -183,7 +183,7 @@ function buildPayload(name, email, mobile, giftNote) {
     email: email,
     mobile: mobile,
     gift_note: giftNote,
-    payment_method: 'Pay at Shop',
+    payment_method: 'Pay on Delivery',
     items: cart.map((i) => ({
       product_id: i.product_id,
       product_name: i.product_name,
@@ -197,6 +197,7 @@ function buildPayload(name, email, mobile, giftNote) {
 
 async function submitOrder(payload, btn) {
   btn.disabled = true;
+  const originalText = btn.textContent;
   btn.textContent = 'Placing order...';
   try {
     const res = await fetch(window.API_BASE_URL + '/api/orders', {
@@ -213,7 +214,7 @@ async function submitOrder(payload, btn) {
   } catch (err) {
     showToast(err.message || 'Something went wrong. Please try again.');
     btn.disabled = false;
-    btn.textContent = 'Confirm Order';
+    btn.textContent = originalText;
   }
 }
 

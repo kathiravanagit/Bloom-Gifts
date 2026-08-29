@@ -51,6 +51,12 @@ function round2(n) {
   return Math.round(n * 100) / 100;
 }
 
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+
 function clearCart() {
   sessionStorage.removeItem(CART_KEY);
   updateCartBadge();
@@ -155,14 +161,14 @@ function renderFooter() {
 
 function productCardHTML(p) {
   return `
-    <a class="product-card tag-card" href="product-detail.html?slug=${p.slug}">
+    <a class="product-card tag-card" href="product-detail.html?slug=${escapeHtml(p.slug)}">
       <div class="product-thumb">
-        ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        ${p.badge ? `<span class="badge">${escapeHtml(p.badge)}</span>` : ''}
+        <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy">
       </div>
       <div class="product-info">
-        <h3>${p.name}</h3>
-        <p class="product-tagline">${p.tagline || ''}</p>
+        <h3>${escapeHtml(p.name)}</h3>
+        <p class="product-tagline">${escapeHtml(p.tagline || '')}</p>
         <div class="product-price-row">
           <div>
             <div class="price-from">Price</div>

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Contact G_giftrees for custom gifts and orders.">
 <link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
 <title>Contact Us | G_giftrees</title>
 <link rel="stylesheet" href="css/style.css">
@@ -72,7 +73,7 @@
     const name = document.getElementById('c_name').value.trim();
     const email = document.getElementById('c_email').value.trim();
     const message = document.getElementById('c_message').value.trim();
-    if (!name || !email || !message) {
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); if (!name || !emailOk || !message) {
       showToast('Please fill in all fields.');
       return;
     }

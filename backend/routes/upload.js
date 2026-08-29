@@ -4,7 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 function requireAdmin(req, res, next) {
-  if (!req.session || !req.session.admin) return res.status(401).json({ error: 'Unauthorized' });
+  if (!req.session || !req.session.adminId) return res.status(401).json({ error: 'Unauthorized' });
   next();
 }
 

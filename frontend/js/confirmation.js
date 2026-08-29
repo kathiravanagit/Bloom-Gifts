@@ -45,7 +45,7 @@ function render(order) {
   const itemsHTML = order.items.map((item) => `
     <div class="confirm-item-row">
       <div>
-        <strong>${item.quantity} &times; ${item.product_name}</strong><br>
+        <strong>${item.quantity} &times; ${escapeHtml(item.product_name)}</strong><br>
         <span style="font-size:0.82rem; color:var(--charcoal-soft);">${customizationLine(item.customizations)}</span>
       </div>
       <div>Custom</div>
@@ -56,8 +56,8 @@ function render(order) {
     <div class="confirm-box">
       <div class="confirm-check"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 7"/></svg></div>
       <h2>Thank you, ${escapeHtml(order.guest_name)}!</h2>
-       <p>Your order has been placed and will be paid at <strong>the shop when you collect it</strong>.</p>
-      <div class="confirm-order-number">Order #${order.order_number}</div>
+       <p>Your order has been placed and will be paid on <strong>delivery when you receive it</strong>.</p>
+      <div class="confirm-order-number">Order #${escapeHtml(order.order_number)}</div>
 
       <div class="confirm-detail-card">
         <h4>Items</h4>

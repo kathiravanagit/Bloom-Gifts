@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
     if (!Array.isArray(items) || items.length === 0) return badRequest(res, 'Your cart is empty.');
 
     for (const item of items) {
-      if (!item.product_name || !item.quantity || !item.unit_price) {
+      if (!item.product_name || !item.quantity) {
         return badRequest(res, 'One of the items in your cart is invalid.');
       }
     }
@@ -47,15 +47,15 @@ router.post('/', async (req, res) => {
         email: email.trim(),
         mobile: mobile.trim(),
         gift_note: (gift_note || '').trim(),
-        payment_method: payment_method || 'Cash on Delivery',
+        payment_method: payment_method || 'Pay on Delivery',
         total_amount: 0,
         items: items.map(item => ({
           product_id: item.product_id || null,
           product_name: item.product_name,
           quantity: item.quantity,
-          unit_price: item.unit_price,
+          unit_price: 0,
           customizations: item.customizations || {},
-          subtotal: item.subtotal
+          subtotal: 0
         }))
       });
 

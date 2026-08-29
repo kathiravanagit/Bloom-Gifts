@@ -83,6 +83,7 @@ async function loadMessages() {
   mv.innerHTML = '<h2 style="margin-bottom:6px;">Message from Client</h2><p style="margin-bottom:16px; color:var(--charcoal-soft);">Loading…</p>';
   try {
     const res = await fetch(window.API_BASE_URL + '/api/admin/messages', { credentials: 'include' });
+    if (res.status === 401) { window.location.href = 'admin-login.html'; return; }
     const messages = await res.json();
     const unread = messages.filter((m) => !m.read).length;
     mv.innerHTML = `
@@ -167,6 +168,7 @@ async function loadStats() {
   const grid = document.getElementById('statGrid');
   try {
     const res = await fetch(window.API_BASE_URL + '/api/admin/stats', { credentials: 'include' });
+    if (res.status === 401) { window.location.href = 'admin-login.html'; return; }
     const s = await res.json();
     grid.innerHTML = `
       <div class="stat-card"><div class="stat-label">Total Orders</div><div class="stat-value">${s.totalOrders}</div></div>
@@ -183,6 +185,7 @@ async function loadOrders() {
   const body = document.getElementById('ordersBody');
   try {
     const res = await fetch(window.API_BASE_URL + '/api/admin/orders', { credentials: 'include' });
+    if (res.status === 401) { window.location.href = 'admin-login.html'; return; }
     const orders = await res.json();
     if (!orders.length) {
       body.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px;">No orders yet.</td></tr>';
@@ -190,7 +193,7 @@ async function loadOrders() {
     }
     body.innerHTML = orders.map((o) => `
       <tr data-id="${o.id}">
-        <td><strong>${o.order_number}</strong></td>
+        <td><strong>${escapeHtml(o.order_number)}</strong></td>
         <td>${escapeHtml(o.guest_name)}</td>
         <td>${new Date(o.created_at).toLocaleString()}</td>
         <td>${o.total_amount ? formatMoney(o.total_amount) : 'TBD'}</td>
@@ -430,6 +433,7 @@ function renderProductForm(d) {
       <div class="form-field"><label>Category</label><select id="f_category">${cats.map(c => `<option ${c === d.category ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
       <div class="form-field"><label>Slug</label><input id="f_slug" value="${escapeHtml(d.slug || '')}" placeholder="e.g. rose-romance-bouquet"></div>
       <div class="form-field"><label>Tagline</label><input id="f_tagline" value="${escapeHtml(d.tagline || '')}"></div>
+      <div class="form-field"><label>Base Price (₹)</label><input id="f_base_price" type="number" min="0" step="0.01" value="${d.base_price != null ? d.base_price : ''}" placeholder="e.g. 500"></div>
       <div class="form-field"><label>Description</label><textarea id="f_description" rows="3">${escapeHtml(d.description || '')}</textarea></div>
       <div class="form-field"><label>Image</label>
         <div id="dropZone" style="border:2px dashed #ccc; border-radius:10px; padding:28px 16px; text-align:center; cursor:pointer; transition:all 0.2s; background:#faf7f5;">
@@ -502,6 +506,7 @@ async function saveProduct(id) {
     description: document.getElementById('f_description').value.trim(),
     image: imageUrl,
     badge: document.getElementById('f_badge').value.trim() || null,
+    base_price: document.getElementById('f_base_price').value ? Number(document.getElementById('f_base_price').value) : 0,
   };
   let options = [];
   const optRaw = document.getElementById('f_options').value.trim();

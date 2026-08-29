@@ -89,9 +89,9 @@ function renderCart() {
 function cartItemHTML(item, index) {
   return `
     <div class="cart-item">
-      <img src="${item.image}" alt="${item.product_name}">
+      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.product_name)}">
       <div>
-        <h4>${item.product_name}</h4>
+        <h4>${escapeHtml(item.product_name)}</h4>
         <div class="meta">${customizationSummary(item.customizations)}</div>
         <div class="qty-control" style="margin-top:10px;">
           <button type="button" data-action="minus" data-index="${index}">&minus;</button>

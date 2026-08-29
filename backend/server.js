@@ -55,6 +55,9 @@ app.use(cors({
   credentials: true,
 }));
 
+if (!process.env.SESSION_SECRET) {
+  console.warn('WARNING: SESSION_SECRET is not set. Using insecure dev fallback. Set SESSION_SECRET in production.');
+}
 app.use(session({
   secret: process.env.SESSION_SECRET || 'bloom-gifts-dev-secret',
   resave: false,
