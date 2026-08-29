@@ -96,8 +96,9 @@ app.use(session({
   }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 4, // 4 hours
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'none',
+    secure: process.env.NODE_ENV === 'production' || process.env.RENDER,
+    sameSite: process.env.NODE_ENV === 'production' || process.env.RENDER ? 'none' : 'lax',
+    httpOnly: true,
   },
 }));
 

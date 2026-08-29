@@ -68,7 +68,7 @@
       const data = await res.json();
       if (!res.ok) { showToast(data.error || 'Login failed'); return; }
       showToast('Welcome back, ' + data.user.name + '!');
-      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+      setTimeout(() => { window.location.replace('index.html'); }, 1200);
     } catch (err) { showToast('Could not log in. Please try again.'); }
   });
 </script>

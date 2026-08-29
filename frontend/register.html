@@ -73,7 +73,7 @@
       const data = await res.json();
       if (!res.ok) { showToast(data.error || 'Registration failed'); return; }
       showToast('Welcome to G_giftrees, ' + data.user.name + '!');
-      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+      setTimeout(() => { window.location.replace('index.html'); }, 1200);
     } catch (err) { showToast('Could not register. Please try again.'); }
   });
 </script>
