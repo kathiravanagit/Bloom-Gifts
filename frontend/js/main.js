@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!mainSession.loggedIn) {
     showWelcomeOverlay();
   } else {
+    document.body.classList.remove('auth-pending');
     initHeroSlideshow();
     loadBestsellers();
   }
@@ -82,8 +83,7 @@ function showWelcomeOverlay() {
 
   function goToLogin() {
     localStorage.setItem('bloomgifts_welcomed', '1');
-    overlay.classList.add('fade-out');
-    setTimeout(() => { window.location.href = 'user-login.html'; }, 800);
+    window.location.href = 'user-login.html';
   }
 
   document.getElementById('welcomeEnter').addEventListener('click', goToLogin);

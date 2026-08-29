@@ -27,6 +27,7 @@ body {
   background: var(--white);
   line-height: 1.55;
 }
+body.auth-pending > *:not(.welcome-overlay):not(script):not(link):not(style):not(meta) { visibility: hidden; }
 img { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
 h1, h2, h3, h4 {
