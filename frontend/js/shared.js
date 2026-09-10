@@ -200,7 +200,7 @@ async function checkUserSession() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const page = document.body.dataset.page || '';
-  const publicPages = ['home', 'products', 'product-detail', 'custom-hamper', 'cart', 'checkout', 'confirmation', 'about', 'contact', 'user-login', 'register', 'admin-login', 'admin-dashboard'];
+  const publicPages = ['home', 'products', 'product-detail', 'custom-hamper', 'cart', 'confirmation', 'about', 'contact', 'user-login', 'register', 'admin-login', 'admin-dashboard'];
 
   if (!publicPages.includes(page)) {
     let allowed = false;
