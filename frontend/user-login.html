@@ -21,6 +21,10 @@
     </div>
 
     <div class="admin-table-card" style="padding:28px;">
+      <div id="loginNotice" style="display:none; background:var(--lavender-pale); border-left:4px solid var(--plum-deep); padding:14px 18px; border-radius:8px; margin-bottom:20px; font-size:0.9rem; color:var(--plum-deep);">
+        <strong>Please log in to continue.</strong>
+        <p style="margin:4px 0 0; font-size:0.84rem; color:var(--charcoal-soft);">You need an account to place your order.</p>
+      </div>
       <form id="loginForm">
         <div class="form-field">
           <label for="l_email">Email</label>
@@ -52,6 +56,12 @@
 <script src="config.js"></script>
   <script src="js/shared.js"></script>
 <script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const returnTo = urlParams.get('returnTo');
+  if (returnTo) {
+    document.getElementById('loginNotice').style.display = 'block';
+  }
+
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('l_email').value.trim();
@@ -68,7 +78,8 @@
       const data = await res.json();
       if (!res.ok) { showToast(data.error || 'Login failed'); return; }
       showToast('Welcome back, ' + data.user.name + '!');
-      setTimeout(() => { window.location.replace('index.html'); }, 1200);
+      const redirect = returnTo || 'index.html';
+      setTimeout(() => { window.location.replace(redirect); }, 1200);
     } catch (err) { showToast('Could not log in. Please try again.'); }
   });
 </script>

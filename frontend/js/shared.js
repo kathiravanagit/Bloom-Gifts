@@ -217,7 +217,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       } catch (e) { /* ignore */ }
     }
     if (!allowed) {
-      window.location.href = 'user-login.html';
+      const loginUrl = new URL('user-login.html', window.location.origin);
+      loginUrl.searchParams.set('returnTo', window.location.pathname + window.location.search);
+      window.location.href = loginUrl.toString();
       return;
     }
   }

@@ -56,6 +56,9 @@
 <script src="config.js"></script>
   <script src="js/shared.js"></script>
 <script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const returnTo = urlParams.get('returnTo');
+
   document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('r_name').value.trim();
@@ -73,7 +76,8 @@
       const data = await res.json();
       if (!res.ok) { showToast(data.error || 'Registration failed'); return; }
       showToast('Welcome to G_giftrees, ' + data.user.name + '!');
-      setTimeout(() => { window.location.replace('index.html'); }, 1200);
+      const redirect = returnTo || 'index.html';
+      setTimeout(() => { window.location.replace(redirect); }, 1200);
     } catch (err) { showToast('Could not register. Please try again.'); }
   });
 </script>
