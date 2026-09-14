@@ -173,8 +173,8 @@ function productCardHTML(p) {
         <p class="product-tagline">${escapeHtml(p.tagline || '')}</p>
         <div class="product-price-row">
           <div>
-            <div class="price-from">Price</div>
-            <div class="price">Custom</div>
+            <div class="price-from">${p.base_price > 0 ? 'From' : 'Price'}</div>
+            <div class="price">${p.base_price > 0 ? formatMoney(p.base_price) : 'Custom'}</div>
           </div>
           <span class="btn btn-outline" style="padding:8px 16px; font-size:0.8rem;">Customize</span>
         </div>

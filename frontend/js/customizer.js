@@ -73,7 +73,7 @@ function render() {
           <div class="tag-chips" id="tagChips"></div>
            <div class="price-dial">
             <span class="label">Total</span>
-            <span class="amount" id="priceAmount">Custom</span>
+            <span class="amount" id="priceAmount">${product.base_price > 0 ? formatMoney(product.base_price) : 'Custom'}</span>
           </div>
         </div>
 
@@ -86,7 +86,7 @@ function render() {
           </div>
         </div>
 
-        <button class="btn btn-primary btn-block" id="addToCartBtn">Add to Cart &mdash; <span id="btnPrice">Custom</span></button>
+        <button class="btn btn-primary btn-block" id="addToCartBtn">Add to Cart &mdash; <span id="btnPrice">${product.base_price > 0 ? formatMoney(product.base_price) : 'Custom'}</span></button>
         <button class="btn btn-outline btn-block" id="remindMeBtn" style="margin-top:10px; border-color:var(--plum-deep); color:var(--plum-deep);">&#9825; Remind Me Later</button>
         <p style="margin-top:14px;"><a href="products.html">&larr; Back to shop</a></p>
       </div>
@@ -188,13 +188,14 @@ function updateTray() {
 
   const unitPrice = computeUnitPrice();
   const total = round2(unitPrice * quantity);
+  const hasPrice = product.base_price > 0;
   const amountEl = document.getElementById('priceAmount');
-  amountEl.textContent = 'Custom';
+  amountEl.textContent = hasPrice ? formatMoney(total) : 'Custom';
   amountEl.classList.remove('bump');
   void amountEl.offsetWidth; // restart animation
   amountEl.classList.add('bump');
 
-  document.getElementById('btnPrice').textContent = 'Custom';
+  document.getElementById('btnPrice').textContent = hasPrice ? formatMoney(total) : 'Custom';
 }
 
 function handleAddToCart() {
